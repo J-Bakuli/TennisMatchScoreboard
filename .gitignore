@@ -1,0 +1,89 @@
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.smarttomcat/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.settings/
+.sts4-cache/
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+# Linux
+*~
+
+# Gradle
+.gradle/
+
+# Tools and local scripts
+*.sh
+src/todo_plan.md
+
+# Docker
+.dockerignore
+*.tar
+*.tgz
+
+# Environment variables
+.env
+*.env
+
+# Logs and temporary files
+*.log
+*.tmp
+logs/
+data/
+tmp/
+cache/
+
+# Test output
+test-output/
+
+# Local data files
+
+# Package files
+*.jar
+*.war
+*.ear
+*.db
+*.db-shm
+*.db-wal
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local Tomcat runtime marker
+catalina.base_IS_UNDEFINED
