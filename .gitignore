@@ -71,6 +71,7 @@ cache/
 test-output/
 
 # Local data files
+src/main/resources/hibernate.cfg.xml
 
 # Package files
 *.jar
