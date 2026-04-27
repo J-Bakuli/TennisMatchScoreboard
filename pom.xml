@@ -13,8 +13,8 @@
         <lombok.version>1.18.42</lombok.version>
         <hibernate-core.version>7.3.0.Final</hibernate-core.version>
         <com.h2database.version>2.3.232</com.h2database.version>
+        <ch.qos.logback>1.5.25</ch.qos.logback>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <hikaricp.version>7.0.2</hikaricp.version>
         <junit-jupiter-engine.version>6.0.3</junit-jupiter-engine.version>
         <junit-jupiter-api.version>6.0.3</junit-jupiter-api.version>
         <servlet.api.version>6.1.0</servlet.api.version>
@@ -50,9 +50,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${hikaricp.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
