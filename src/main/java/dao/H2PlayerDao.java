@@ -37,9 +37,7 @@ public class H2PlayerDao implements PlayerDao {
 
             return toPlayer(playerEntity);
         } catch (Exception e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
+            rollbackSafely(tx, e);
 
             if (isDuplicate(e)) {
                 throw new AlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
@@ -120,5 +118,17 @@ public class H2PlayerDao implements PlayerDao {
         PlayerEntity entity = new PlayerEntity();
         entity.setName(normalizedName);
         return entity;
+    }
+
+
+    private void rollbackSafely(Transaction tx, Exception originalError) {
+        if (tx == null || !tx.isActive()) {
+            return;
+        }
+        try {
+            tx.rollback();
+        } catch (Exception rollbackError) {
+            log.warn("Rollback failed after original error: {}", originalError.getMessage(), rollbackError);
+        }
     }
 }
