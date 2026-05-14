@@ -1,7 +1,6 @@
 import dao.InMemoryOngoingMatchDao;
 import dao.OngoingMatchDao;
 import exception.NotFoundException;
-import exception.ValidationException;
 import model.OngoingMatch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
