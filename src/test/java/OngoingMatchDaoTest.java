@@ -17,7 +17,7 @@ public class OngoingMatchDaoTest {
     }
 
     @Test
-    void saveOngoingMatchTest() {
+    public void saveOngoingMatchTest() {
         UUID uuid = UUID.randomUUID();
         OngoingMatch saved = ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
 
@@ -27,7 +27,7 @@ public class OngoingMatchDaoTest {
     }
 
     @Test
-    void findByUuidTest() {
+    public void findByUuidTest() {
         UUID uuid = UUID.randomUUID();
         ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
 
@@ -43,7 +43,7 @@ public class OngoingMatchDaoTest {
     }
 
     @Test
-    void removeByUuidTest() {
+    public void removeByUuidTest() {
         UUID uuid = UUID.randomUUID();
         ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
 

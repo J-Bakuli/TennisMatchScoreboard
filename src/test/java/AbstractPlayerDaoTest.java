@@ -9,7 +9,7 @@ public abstract class AbstractPlayerDaoTest {
     protected PlayerDao playerDao;
 
     @Test
-    void createPlayerTest() {
+    public void createPlayerTest() {
         Player saved = playerDao.save(new Player(null, "  Sharapova  "));
         Assertions.assertNotNull(saved.getId());
         Assertions.assertEquals("sharapova", saved.getName());
@@ -22,7 +22,7 @@ public abstract class AbstractPlayerDaoTest {
     }
 
     @Test
-    void findByNameTest() {
+    public void findByNameTest() {
         Player created = playerDao.save(new Player(null, "Safin"));
         Player found1 = playerDao.findByName("safin");
         Player found2 = playerDao.findByName("  SAFIN  ");
@@ -37,7 +37,7 @@ public abstract class AbstractPlayerDaoTest {
     }
 
     @Test
-    void findByIdTest() {
+    public void findByIdTest() {
         Player created = playerDao.save(new Player(null, "Safin"));
         Player found = playerDao.findById(created.getId());
 
