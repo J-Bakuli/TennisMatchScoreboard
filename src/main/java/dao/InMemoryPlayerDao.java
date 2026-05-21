@@ -4,8 +4,9 @@ import exception.AlreadyExistsException;
 import exception.NotFoundException;
 import exception.ValidationException;
 import model.Player;
+import util.PlayerNameUtils;
+import validation.PlayerNameValidation;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,12 +22,8 @@ public class InMemoryPlayerDao implements PlayerDao {
         }
 
         String rawName = player.getName();
-
-        if (rawName == null || rawName.isBlank()) {
-            throw new ValidationException("Player's name must not be null or blank.");
-        }
-
-        String normalizedName = rawName.trim().toLowerCase(Locale.ROOT);
+        PlayerNameValidation.validatePlayerName(rawName);
+        String normalizedName = PlayerNameUtils.normalizeName(rawName);
 
         boolean alreadyExists = players.values().stream()
                 .anyMatch(existingPlayer -> normalizedName.equals(existingPlayer.getName()));
@@ -44,10 +41,8 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new ValidationException("Player name must not be null or blank.");
-        }
-        String normalizedName = name.trim().toLowerCase(Locale.ROOT);
+        PlayerNameValidation.validatePlayerName(name);
+        String normalizedName = PlayerNameUtils.normalizeName(name);
         return players.values().stream().filter(
                         player -> normalizedName.equals(player.getName()))
                 .findFirst()

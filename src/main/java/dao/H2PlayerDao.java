@@ -10,20 +10,22 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.entity.PlayerEntity;
 import util.HibernateUtil;
-
-import java.util.Locale;
+import util.PlayerNameUtils;
+import validation.PlayerNameValidation;
 
 @Slf4j
 public class H2PlayerDao implements PlayerDao {
     private static final String SELECT_BY_NAME = "from PlayerEntity p where p.name = :name";
     private static final String SELECT_BY_ID = "from PlayerEntity p where p.id = :id";
+
     @Override
     public Player save(Player player) {
         if (player == null) {
             throw new ValidationException("Player must not be null.");
         }
 
-        String normalizedName = normalizeName(player.getName());
+        PlayerNameValidation.validatePlayerName(player.getName());
+        String normalizedName = PlayerNameUtils.normalizeName(player.getName());
 
         log.debug("Saving player: id={}, name={} ", player.getId(), normalizedName);
 
@@ -49,7 +51,8 @@ public class H2PlayerDao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        String normalizedName = normalizeName(name);
+        PlayerNameValidation.validatePlayerName(name);
+        String normalizedName = PlayerNameUtils.normalizeName(name);
 
         log.debug("Finding player by name: name={} ", normalizedName);
 
@@ -100,14 +103,6 @@ public class H2PlayerDao implements PlayerDao {
         return cause != null
                 && cause.getMessage() != null
                 && cause.getMessage().toLowerCase().contains("unique");
-    }
-
-    private String normalizeName(String rawName) {
-        if (rawName == null || rawName.isBlank()) {
-            throw new ValidationException("Player's name must not be null or blank.");
-        }
-
-        return rawName.trim().toLowerCase(Locale.ROOT);
     }
 
     private Player toPlayer(PlayerEntity entity) {

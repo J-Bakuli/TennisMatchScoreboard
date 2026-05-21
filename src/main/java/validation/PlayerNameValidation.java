@@ -1,15 +1,14 @@
 package validation;
 
 import exception.ValidationException;
+import util.PlayerNameUtils;
 
-import java.util.Locale;
-
-public class MatchValidation {
+public class PlayerNameValidation {
     public static void validatePlayerNames(String name1, String name2) {
         validatePlayerName(name1);
         validatePlayerName(name2);
 
-        if (normalizeName(name1).equals(normalizeName(name2))) {
+        if (PlayerNameUtils.normalizeName(name1).equals(PlayerNameUtils.normalizeName(name2))) {
             throw new ValidationException("Player names should be unique and cannot be equal");
         }
     }
@@ -23,7 +22,7 @@ public class MatchValidation {
             throw new ValidationException("playerName cannot be empty or blank");
         }
 
-        String normalizedName = normalizeName(name);
+        String normalizedName = PlayerNameUtils.normalizeName(name);
         if (normalizedName.length() < 2 || normalizedName.length() > 20) {
             throw new ValidationException("playerName length must be between 2 and 20 characters");
         }
@@ -33,9 +32,5 @@ public class MatchValidation {
                     "playerName must contain only Latin letters, spaces, apostrophes or hyphens"
             );
         }
-    }
-
-    private static String normalizeName(String name) {
-        return name.trim().toLowerCase(Locale.ROOT);
     }
 }
