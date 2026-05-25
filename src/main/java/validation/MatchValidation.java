@@ -1,7 +1,12 @@
 package validation;
 
 import exception.ValidationException;
+import model.MatchState;
+import model.OngoingMatch;
 import util.PlayerUtils;
+
+import java.util.Objects;
+import java.util.UUID;
 
 public class MatchValidation {
     public static void validateMatchUuid(String uuid) {
@@ -27,6 +32,103 @@ public class MatchValidation {
 
         if (!normalizedWinner.equals("player1") && !normalizedWinner.equals("player2")) {
             throw new ValidationException("winner must be either player1 or player2");
+        }
+    }
+
+    public static void validateOngoingMatch(OngoingMatch ongoingMatch) {
+        if (ongoingMatch == null) {
+            throw new ValidationException("ongoingMatch cannot be null");
+        }
+
+        UUID uuid = ongoingMatch.getUuid();
+        Integer player1 = ongoingMatch.getPlayer1();
+        Integer player2 = ongoingMatch.getPlayer2();
+        MatchState matchState = ongoingMatch.getMatchState();
+        Integer winner = ongoingMatch.getWinner();
+
+        if (uuid == null) {
+            throw new ValidationException("ongoingMatch uuid cannot be null");
+        }
+
+        if (matchState == null) {
+            throw new ValidationException("matchState cannot be null");
+        }
+
+        validateMatchState(matchState);
+
+        if (player1 == null) {
+            throw new ValidationException("player1 cannot be null");
+        }
+
+        if (player2 == null) {
+            throw new ValidationException("player2 cannot be null");
+        }
+
+        if (player1.equals(player2)) {
+            throw new ValidationException("players 1 and 2 must be different");
+        }
+
+        if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
+            throw new ValidationException("winner must be one of ongoing match players");
+        }
+
+        if (!Objects.equals(player1, matchState.getPlayer1Id())) {
+            throw new ValidationException("player1 from ongoingMatch must be the same as the one from matchState");
+        }
+
+        if (!Objects.equals(player2, matchState.getPlayer2Id())) {
+            throw new ValidationException("player2 from ongoingMatch must be the same as the one from matchState");
+        }
+
+        if (winner != null && !Objects.equals(winner, matchState.getWinnerPlayerId())) {
+            throw new ValidationException("existing winner from ongoingMatch must be the same as that from matchState");
+        }
+    }
+
+    public static void validateMatchState(MatchState matchState) {
+        if (matchState == null) {
+            throw new ValidationException("matchState cannot be null");
+        }
+        validateNonNegativeScores(matchState);
+        validateFinishedStateConsistency(matchState);
+    }
+
+    private static void validateNonNegativeScores(MatchState matchState) {
+        if (matchState.getPlayer1GamesInSet() < 0) {
+            throw new ValidationException("player1GamesInSet cannot be negative");
+        }
+
+        if (matchState.getPlayer2GamesInSet() < 0) {
+            throw new ValidationException("player2GamesInSet cannot be negative");
+        }
+
+        if (matchState.getPlayer1PointsInGame() < 0) {
+            throw new ValidationException("player1PointsInGame cannot be negative");
+        }
+
+        if (matchState.getPlayer2PointsInGame() < 0) {
+            throw new ValidationException("player2PointsInGame cannot be negative");
+        }
+
+        if (matchState.getPlayer1TieBreakPoints() < 0) {
+            throw new ValidationException("player1TieBreakPoints cannot be negative");
+        }
+
+        if (matchState.getPlayer2TieBreakPoints() < 0) {
+            throw new ValidationException("player2TieBreakPoints cannot be negative");
+        }
+    }
+
+    private static void validateFinishedStateConsistency(MatchState matchState) {
+        boolean isFinished = matchState.isFinished();
+        Integer winnerPlayerId = matchState.getWinnerPlayerId();
+
+        if (isFinished && winnerPlayerId == null) {
+            throw new ValidationException("winnerPlayerId must be set if matchState is finished");
+        }
+
+        if (!isFinished && winnerPlayerId != null) {
+            throw new ValidationException("winnerPlayerId cannot be set until match is finished");
         }
     }
 }
