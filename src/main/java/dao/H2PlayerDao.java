@@ -5,6 +5,7 @@ import exception.DatabaseException;
 import exception.NotFoundException;
 import exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import mapper.H2PlayerMapper;
 import model.Player;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -32,12 +33,12 @@ public class H2PlayerDao implements PlayerDao {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            PlayerEntity playerEntity = toEntity(normalizedName);
+            PlayerEntity playerEntity = H2PlayerMapper.toEntity(normalizedName);
 
             session.persist(playerEntity);
             tx.commit();
 
-            return toPlayer(playerEntity);
+            return H2PlayerMapper.toPlayer(playerEntity);
         } catch (Exception e) {
             rollbackSafely(tx, e);
 
@@ -65,7 +66,7 @@ public class H2PlayerDao implements PlayerDao {
                 throw new NotFoundException("Player not found by name=" + normalizedName);
             }
 
-            return toPlayer(playerEntity);
+            return H2PlayerMapper.toPlayer(playerEntity);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -90,7 +91,7 @@ public class H2PlayerDao implements PlayerDao {
                 throw new NotFoundException("Player not found by id=" + id);
             }
 
-            return toPlayer(playerEntity);
+            return H2PlayerMapper.toPlayer(playerEntity);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -104,17 +105,6 @@ public class H2PlayerDao implements PlayerDao {
                 && cause.getMessage() != null
                 && cause.getMessage().toLowerCase().contains("unique");
     }
-
-    private Player toPlayer(PlayerEntity entity) {
-        return new Player(entity.getId(), entity.getName());
-    }
-
-    private PlayerEntity toEntity(String normalizedName) {
-        PlayerEntity entity = new PlayerEntity();
-        entity.setName(normalizedName);
-        return entity;
-    }
-
 
     private void rollbackSafely(Transaction tx, Exception originalError) {
         if (tx == null || !tx.isActive()) {
