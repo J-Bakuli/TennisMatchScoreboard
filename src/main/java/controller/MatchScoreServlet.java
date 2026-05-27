@@ -1,6 +1,8 @@
 package controller;
 
+import dao.H2PlayerDao;
 import dao.OngoingMatchDao;
+import dao.PlayerDao;
 import db.AppLifecycleListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.MatchScoreResult;
 import model.MatchState;
 import model.OngoingMatch;
+import model.PlayerSide;
 import service.MatchScoreCalculationService;
 import service.OngoingMatchService;
 
@@ -24,11 +27,12 @@ public class MatchScoreServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        PlayerDao playerDao = new H2PlayerDao();
         OngoingMatchDao ongoingMatchDao = (OngoingMatchDao) getServletContext().getAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR);
         if (ongoingMatchDao == null) {
             throw new ServletException("OngoingMatchDao is not initialized in ServletContext");
         }
-        ongoingMatchService = new OngoingMatchService(ongoingMatchDao);
+        ongoingMatchService = new OngoingMatchService(ongoingMatchDao, playerDao);
         matchScoreCalculationService = new MatchScoreCalculationService();
     }
 
@@ -40,6 +44,8 @@ public class MatchScoreServlet extends HttpServlet {
         OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
         req.setAttribute("uuid", ongoingMatch.getUuid());
         req.setAttribute("matchState", ongoingMatch.getMatchState());
+        req.setAttribute("player1Name", ongoingMatchService.findPlayerNameByOngoingMatch(ongoingMatch, PlayerSide.PLAYER1));
+        req.setAttribute("player2Name", ongoingMatchService.findPlayerNameByOngoingMatch(ongoingMatch, PlayerSide.PLAYER2));
         req.setAttribute("player1", ongoingMatch.getPlayer1());
         req.setAttribute("player2", ongoingMatch.getPlayer2());
         req.setAttribute("winner", ongoingMatch.getWinner());
