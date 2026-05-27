@@ -46,19 +46,19 @@
                 </thead>
                 <tbody>
                 <tr class="player1">
-                    <td class="table-text">Rafael Nadal</td>
-                    <td class="table-text">2</td>
-                    <td class="table-text">4</td>
-                    <td class="table-text">40</td>
+                    <td class="table-text">${player1Name}</td>
+                    <td class="table-text">${matchState.player1Sets}</td>
+                    <td class="table-text">${matchState.player1GamesInSet}</td>
+                    <td class="table-text">${matchState.player1PointsInGame}</td>
                     <td class="table-text">
                         <div class="score-btn">Score</div>
                     </td>
                 </tr>
                 <tr class="player2">
-                    <td class="table-text">Roger Federer</td>
-                    <td class="table-text">2</td>
-                    <td class="table-text">3</td>
-                    <td class="table-text">15</td>
+                    <td class="table-text">${player2Name}</td>
+                    <td class="table-text">${matchState.player1Sets}</td>
+                    <td class="table-text">${matchState.player1GamesInSet}</td>
+                    <td class="table-text">${matchState.player1PointsInGame}</td>
                     <td class="table-text">
                         <div class="score-btn">Score</div>
                     </td>
