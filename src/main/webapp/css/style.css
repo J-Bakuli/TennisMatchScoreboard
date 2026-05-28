@@ -163,9 +163,10 @@ footer {
     border-radius: 30px;
     margin: 20px 0;
     background-image: url('../images/racket.png');
-    height: 503px;
+    min-height: 20vh;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 .form-container {
@@ -223,7 +224,8 @@ footer {
     margin-top: 20px;
     background-image: url('../images/scorekeeper.png');
     background-position: center;
-    min-height: 30vh;
+    background-repeat: no-repeat;
+    min-height: 20vh;
     background-size: cover;
 }
 
@@ -272,12 +274,12 @@ footer {
 }
 
 .player1, .player2 {
-    font-size: 40px;
+    font-size: 24px;
 }
 
 .player1 td, .player2 td {
     width: 5%;
-    padding: 60px 5px;
+    padding: 20px 5px;
     font-family: "Roboto Mono", monospace;
     font-optical-sizing: auto;
     font-weight: 300;
