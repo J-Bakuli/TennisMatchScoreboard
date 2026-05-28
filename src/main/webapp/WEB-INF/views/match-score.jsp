@@ -56,9 +56,9 @@
                 </tr>
                 <tr class="player2">
                     <td class="table-text">${player2Name}</td>
-                    <td class="table-text">${matchState.player1Sets}</td>
-                    <td class="table-text">${matchState.player1GamesInSet}</td>
-                    <td class="table-text">${matchState.player1PointsInGame}</td>
+                    <td class="table-text">${matchState.player2Sets}</td>
+                    <td class="table-text">${matchState.player2GamesInSet}</td>
+                    <td class="table-text">${matchState.player2PointsInGame}</td>
                     <td class="table-text">
                         <div class="score-btn">Score</div>
                     </td>
