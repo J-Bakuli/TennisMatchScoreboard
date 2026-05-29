@@ -1,5 +1,6 @@
 package controller;
 
+import dao.H2MatchesDao;
 import dao.H2PlayerDao;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
@@ -14,6 +15,7 @@ import model.MatchScoreResult;
 import model.MatchState;
 import model.OngoingMatch;
 import model.PlayerSide;
+import service.FinishedMatchesService;
 import service.MatchScoreCalculationService;
 import service.OngoingMatchService;
 
@@ -23,16 +25,19 @@ import java.io.IOException;
 @Slf4j
 public class MatchScoreServlet extends HttpServlet {
     private OngoingMatchService ongoingMatchService;
+    private FinishedMatchesService finishedMatchesService;
     private MatchScoreCalculationService matchScoreCalculationService;
 
     @Override
     public void init() throws ServletException {
         PlayerDao playerDao = new H2PlayerDao();
+        H2MatchesDao matchesDao = new H2MatchesDao(); //Todo переделать на servletContext
         OngoingMatchDao ongoingMatchDao = (OngoingMatchDao) getServletContext().getAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR);
         if (ongoingMatchDao == null) {
             throw new ServletException("OngoingMatchDao is not initialized in ServletContext");
         }
         ongoingMatchService = new OngoingMatchService(ongoingMatchDao, playerDao);
+        finishedMatchesService = new FinishedMatchesService(matchesDao);
         matchScoreCalculationService = new MatchScoreCalculationService();
     }
 
@@ -65,7 +70,7 @@ public class MatchScoreServlet extends HttpServlet {
         MatchScoreResult matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
 
         if (matchScoreResult.isFinished()) {
-            ongoingMatchService.saveFinishedMatch(uuid);
+            finishedMatchesService.saveFinishedMatch(ongoingMatch);
             ongoingMatchService.finishOngoingMatch(uuid);
             resp.sendRedirect(req.getContextPath() + "/matches");
         } else {
