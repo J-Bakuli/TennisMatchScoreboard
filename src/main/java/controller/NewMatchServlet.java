@@ -1,12 +1,10 @@
 package controller;
 
-import dao.H2PlayerDao;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import db.AppLifecycleListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +15,13 @@ import java.util.UUID;
 
 @WebServlet({"/new-match"})
 @Slf4j
-public class NewMatchServlet extends HttpServlet {
+public class NewMatchServlet extends BaseServlet {
     private NewMatchService newMatchService;
 
     @Override
     public void init() throws ServletException {
-        PlayerDao playerDao = new H2PlayerDao();
-        OngoingMatchDao ongoingMatchDao = (OngoingMatchDao) getServletContext().getAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR);
-        if (ongoingMatchDao == null) {
-            throw new ServletException("OngoingMatchDao is not initialized in ServletContext");
-        }
+        PlayerDao playerDao = getRequiredAttribute(AppLifecycleListener.PLAYER_DAO_ATTR, PlayerDao.class);
+        OngoingMatchDao ongoingMatchDao = getRequiredAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR, OngoingMatchDao.class);
         newMatchService = new NewMatchService(playerDao, ongoingMatchDao);
     }
 

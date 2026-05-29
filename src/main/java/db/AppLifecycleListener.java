@@ -1,7 +1,11 @@
 package db;
 
+import dao.H2MatchesDao;
+import dao.H2PlayerDao;
 import dao.InMemoryOngoingMatchDao;
+import dao.MatchesDao;
 import dao.OngoingMatchDao;
+import dao.PlayerDao;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -13,6 +17,8 @@ import util.HibernateUtil;
 @WebListener
 public class AppLifecycleListener implements ServletContextListener {
     public static final String ONGOING_MATCH_DAO_ATTR = "ongoingMatchDao";
+    public static final String PLAYER_DAO_ATTR = "playerDao";
+    public static final String MATCHES_DAO_ATTR = "matchesDao";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -20,10 +26,14 @@ public class AppLifecycleListener implements ServletContextListener {
         try {
             SessionFactory ignored = HibernateUtil.getSessionFactory();
             OngoingMatchDao ongoingMatchDao = new InMemoryOngoingMatchDao();
+            PlayerDao playerDao = new H2PlayerDao();
+            MatchesDao matchesDao = new H2MatchesDao();
             sce.getServletContext().setAttribute(ONGOING_MATCH_DAO_ATTR, ongoingMatchDao);
+            sce.getServletContext().setAttribute(PLAYER_DAO_ATTR, playerDao);
+            sce.getServletContext().setAttribute(MATCHES_DAO_ATTR, matchesDao);
             log.info("Hibernate SessionFactory initialized successfully");
         } catch (Exception e) {
-            log.error("Failed to initialize Hibernate SessionFactory", e);
+            log.error("Failed to initialize Hibernate SessionFactory and DAO", e);
             throw e;
         }
     }
@@ -33,7 +43,7 @@ public class AppLifecycleListener implements ServletContextListener {
         log.info("Application context destroy started, closing SessionFactory");
         try {
             HibernateUtil.shutdown();
-            log.info("Hibernate SessionFactory closed");
+            log.info("Hibernate SessionFactory is closed");
         } catch (Exception e) {
             log.error("Failed to close Hibernate SessionFactory", e);
         }
