@@ -53,7 +53,7 @@ public class MatchScoreServlet extends BaseServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         log.info("POST /match-score");
         String uuid = req.getParameter("uuid");
         String winner = req.getParameter("winner");
@@ -61,8 +61,14 @@ public class MatchScoreServlet extends BaseServlet {
         OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
         Integer winnerId = ongoingMatchService.findWinnerPlayerId(winner, ongoingMatch);
         MatchState matchState = ongoingMatch.getMatchState();
+        MatchScoreResult matchScoreResult;
 
-        MatchScoreResult matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
+        if (matchState.isFinished()) {
+            resp.sendRedirect(req.getContextPath() + "/matches");
+            return;
+        } else {
+            matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
+        }
 
         if (matchScoreResult.isFinished()) {
             finishedMatchesService.saveFinishedMatch(ongoingMatch);
