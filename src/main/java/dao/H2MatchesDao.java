@@ -5,7 +5,6 @@ import exception.DatabaseException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2FinishedMatchMapper;
 import model.FinishedMatch;
-import model.MatchScoreResult;
 import model.OngoingMatch;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,10 +12,17 @@ import persistence.entity.FinishedMatchEntity;
 import util.HibernateUtil;
 import validation.MatchValidation;
 
-import java.util.UUID;
+import java.util.List;
 
 @Slf4j
 public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
+    private static final String FIND_ALL_MATCHES =
+            "SELECT m FROM FinishedMatchEntity m " +
+                    "JOIN FETCH m.player1 " +
+                    "JOIN FETCH m.player2 " +
+                    "JOIN FETCH m.winner " +
+                    "ORDER BY m.finishedAt DESC";
+
     @Override
     public FinishedMatch save(OngoingMatch ongoingMatch) {
         MatchValidation.validateOngoingMatch(ongoingMatch);
@@ -45,12 +51,20 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public MatchScoreResult findAll(UUID uuid) {
-        return null;
+    public List<FinishedMatch> findAll() {
+        log.debug("Finding all finished matches");
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<FinishedMatchEntity> finishedMatchEntities = session.createQuery(FIND_ALL_MATCHES, FinishedMatchEntity.class)
+                    .getResultList();
+            return H2FinishedMatchMapper.toFinishedMatch(finishedMatchEntities);
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to find finished matches", e);
+        }
     }
 
     @Override
-    public Integer countAll(UUID uuid) {
+    public Integer countAll() {
         return null;
     }
 }

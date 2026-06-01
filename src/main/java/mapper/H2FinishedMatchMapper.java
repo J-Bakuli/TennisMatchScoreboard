@@ -8,6 +8,7 @@ import persistence.entity.PlayerEntity;
 import validation.MatchValidation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public final class H2FinishedMatchMapper {
     private H2FinishedMatchMapper() {
@@ -20,6 +21,12 @@ public final class H2FinishedMatchMapper {
                 finishedMatchEntity.getPlayer2().getId(),
                 finishedMatchEntity.getWinner().getId(),
                 finishedMatchEntity.getFinishedAt());
+    }
+
+    public static List<FinishedMatch> toFinishedMatch(List <FinishedMatchEntity> entities) {
+        return entities.stream()
+                .map(H2FinishedMatchMapper::toFinishedMatch)
+                .toList();
     }
 
     public static FinishedMatchEntity toEntity(OngoingMatch ongoingMatch) {
