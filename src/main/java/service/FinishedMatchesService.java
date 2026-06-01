@@ -9,10 +9,13 @@ import model.FinishedMatch;
 import model.OngoingMatch;
 import validation.MatchValidation;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
 public class FinishedMatchesService {
+    private static final DateTimeFormatter FINISHED_AT_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final MatchesDao matchesDao;
     private final PlayerDao playerDao;
 
@@ -35,6 +38,8 @@ public class FinishedMatchesService {
 
         return finishedMatches.stream()
                 .map(match -> {
+                    LocalDateTime finishedAt = match.getFinishedAt();
+                    String finishedAtFormatted = finishedAt.format(FINISHED_AT_FORMATTER);
                     String player1Name = resolvePlayerNameById(match.getPlayer1Id(), "player1");
                     String player2Name = resolvePlayerNameById(match.getPlayer2Id(), "player2");
                     String winnerName = resolvePlayerNameById(match.getWinnerId(), "winner");
@@ -43,11 +48,11 @@ public class FinishedMatchesService {
                             player1Name,
                             player2Name,
                             winnerName,
-                            match.getFinishedAt()
+                            finishedAt,
+                            finishedAtFormatted
                     );
                 })
                 .toList(); //Todo оптимизировать позже
-
     }
 
     private String resolvePlayerNameById(Integer playerId, String role) {

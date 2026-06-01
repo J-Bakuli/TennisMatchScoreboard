@@ -44,6 +44,7 @@
         <table class="table-matches">
             <thead>
             <tr>
+                <th>Game date</th>
                 <th>Player One</th>
                 <th>Player Two</th>
                 <th>Winner</th>
@@ -54,6 +55,7 @@
                 <c:when test="${not empty matches}">
                     <c:forEach var="match" items="${matches}">
                         <tr>
+                            <td>${match.finishedAtFormatted}</td>
                             <td>${match.player1Name}</td>
                             <td>${match.player2Name}</td>
                             <td><span class="winner-name-td">${match.winnerName}</span></td>
@@ -62,7 +64,7 @@
                 </c:when>
                 <c:otherwise>
                     <tr>
-                        <td colspan="3">No matches yet</td>
+                        <td colspan="4">No matches yet</td>
                     </tr>
                 </c:otherwise>
             </c:choose>
