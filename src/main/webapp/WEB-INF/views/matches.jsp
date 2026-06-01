@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -41,36 +42,31 @@
         </div>
 
         <table class="table-matches">
+            <thead>
             <tr>
                 <th>Player One</th>
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
+            </thead>
+            <tbody>
+            <c:choose>
+                <c:when test="${not empty matches}">
+                    <c:forEach var="match" items="${matches}">
+                        <tr>
+                            <td>${match.player1Name}</td>
+                            <td>${match.player2Name}</td>
+                            <td><span class="winner-name-td">${match.winnerName}</span></td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td colspan="3">No matches yet</td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
+            </tbody>
         </table>
 
         <div class="pagination">
