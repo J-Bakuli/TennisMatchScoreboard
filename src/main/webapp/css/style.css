@@ -451,20 +451,28 @@ footer {
     margin-bottom: 20px;
     border-collapse: collapse;
     border: 1px solid #ccc;
+    table-layout: fixed;
 }
 
 .table-matches th {
     font-weight: bold;
-    padding: 5px;
+    padding: 8px 6px;
     background: #dddddd;
     border: 1px solid #dddddd;
+    text-align: center;
 }
 
 .table-matches td {
-    width: 33%;
+    width: 25%;
     border-bottom: 1px solid #dddddd;
-    padding: 51px 0;
+    padding: 18px 6px;
     text-align: center;
+    vertical-align: middle;
+}
+
+.table-matches td:first-child,
+.table-matches th:first-child {
+    white-space: nowrap;
 }
 
 .table-matches tr td:first-child, .table-matches tr th:first-child {
@@ -477,8 +485,9 @@ footer {
 
 .winner-name-td {
     background-color: #dddddd;
-    display: block;
-    width: 38%;
+    display: inline-block;
+    width: auto;
+    padding: 4px 10px;
     margin: 0 auto;
     border-radius: 18px;
 }
