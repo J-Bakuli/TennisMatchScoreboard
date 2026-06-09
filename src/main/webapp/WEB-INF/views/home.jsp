@@ -22,8 +22,8 @@
         </div>
         <div>
             <nav class="nav-links">
-                <a class="nav-link" href="#">Home</a>
-                <a class="nav-link" href="#">Matches</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/home">Home</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/matches">Matches</a>
             </nav>
         </div>
     </section>
@@ -34,12 +34,12 @@
         <p>Manage your tennis matches, record results, and track rankings</p>
         <div class="welcome-image"></div>
         <div class="form-container center">
-            <a class="homepage-action-button" href="#">
+            <a class="homepage-action-button" href="${pageContext.request.contextPath}/new-match">
                 <button class="btn start-match">
                     Start a new match
                 </button>
             </a>
-            <a class="homepage-action-button" href="#">
+            <a class="homepage-action-button" href="${pageContext.request.contextPath}/matches">
                 <button class="btn view-results">
                     View match results
                 </button>
