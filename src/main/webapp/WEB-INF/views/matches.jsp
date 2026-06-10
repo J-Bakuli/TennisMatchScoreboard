@@ -32,6 +32,9 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
+        <c:if test="${not empty errorMessage}">
+            <p class="error-message">${errorMessage}</p>
+        </c:if>
         <div class="input-container">
             <input class="input-filter" placeholder="Filter by name" type="text" />
             <div>
@@ -52,6 +55,11 @@
             </thead>
             <tbody>
             <c:choose>
+                <c:when test="${not empty errorMessage}">
+                    <tr>
+                        <td colspan="4">Unable to load matches. Please try again later.</td>
+                    </tr>
+                </c:when>
                 <c:when test="${not empty matches}">
                     <c:forEach var="match" items="${matches}">
                         <tr>

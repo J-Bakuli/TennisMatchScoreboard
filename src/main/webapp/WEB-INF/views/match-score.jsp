@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -31,57 +32,62 @@
     </section>
 </header>
 <main>
-  <form method="post"
-        action="${pageContext.request.contextPath}/match-score"
-        onsubmit="this.querySelectorAll('button[type=submit]').forEach(btn => { btn.disabled = true;});">
-  <input type="hidden" name="winner" id="winnerField" value="">
-  <input type="hidden" name="uuid" value="${uuid}">
     <div class="container">
         <h1>Current match</h1>
-        <div class="current-match-image"></div>
-        <section class="score">
-            <table class="table">
-                <thead class="result">
-                <tr>
-                    <th class="table-text">Player</th>
-                    <th class="table-text">Sets</th>
-                    <th class="table-text">Games</th>
-                    <th class="table-text">Points</th>
-                    <th class="table-text">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="player1">
-                    <td class="table-text">${player1Name}</td>
-                    <td class="table-text">${matchState.player1Sets}</td>
-                    <td class="table-text">${matchState.player1GamesInSet}</td>
-                    <td class="table-text">${matchState.player1PointsInGame}</td>
-                    <td class="table-text">
-                        <button class="score-btn"
-                                type="submit"
-                                onclick="document.getElementById('winnerField').value='player1';">
-                                Score
-                        </button>
-                    </td>
-                </tr>
-                <tr class="player2">
-                    <td class="table-text">${player2Name}</td>
-                    <td class="table-text">${matchState.player2Sets}</td>
-                    <td class="table-text">${matchState.player2GamesInSet}</td>
-                    <td class="table-text">${matchState.player2PointsInGame}</td>
-                    <td class="table-text">
-                        <button class="score-btn"
-                                type="submit"
-                                onclick="document.getElementById('winnerField').value='player2';">
-                                Score
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </section>
+        <c:if test="${not empty errorMessage}">
+            <p class="error-message">${errorMessage}</p>
+        </c:if>
+        <c:if test="${empty errorMessage}">
+            <form method="post"
+                  action="${pageContext.request.contextPath}/match-score"
+                  onsubmit="this.querySelectorAll('button[type=submit]').forEach(btn => { btn.disabled = true;});">
+                <input type="hidden" name="winner" id="winnerField" value="">
+                <input type="hidden" name="uuid" value="${uuid}">
+                <div class="current-match-image"></div>
+                <section class="score">
+                    <table class="table">
+                        <thead class="result">
+                        <tr>
+                            <th class="table-text">Player</th>
+                            <th class="table-text">Sets</th>
+                            <th class="table-text">Games</th>
+                            <th class="table-text">Points</th>
+                            <th class="table-text">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="player1">
+                            <td class="table-text">${player1Name}</td>
+                            <td class="table-text">${matchState.player1Sets}</td>
+                            <td class="table-text">${matchState.player1GamesInSet}</td>
+                            <td class="table-text">${matchState.player1PointsInGame}</td>
+                            <td class="table-text">
+                                <button class="score-btn"
+                                        type="submit"
+                                        onclick="document.getElementById('winnerField').value='player1';">
+                                    Score
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="player2">
+                            <td class="table-text">${player2Name}</td>
+                            <td class="table-text">${matchState.player2Sets}</td>
+                            <td class="table-text">${matchState.player2GamesInSet}</td>
+                            <td class="table-text">${matchState.player2PointsInGame}</td>
+                            <td class="table-text">
+                                <button class="score-btn"
+                                        type="submit"
+                                        onclick="document.getElementById('winnerField').value='player2';">
+                                    Score
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </form>
+        </c:if>
     </div>
-  </form>
 </main>
 <footer>
     <div class="footer">

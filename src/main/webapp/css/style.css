@@ -518,3 +518,8 @@ footer {
 .num-page.current {
     font-weight: bold;
 }
+
+.error-message {
+    color: #c62828;
+    margin: 0 0 1rem;
+}

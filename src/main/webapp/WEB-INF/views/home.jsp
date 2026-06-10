@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +32,9 @@
 <main>
     <div class="container">
         <h1>Welcome to Tennis Scoreboard</h1>
+        <c:if test="${not empty errorMessage}">
+            <p class="error-message">${errorMessage}</p>
+        </c:if>
         <p>Manage your tennis matches, record results, and track rankings</p>
         <div class="welcome-image"></div>
         <div class="form-container center">

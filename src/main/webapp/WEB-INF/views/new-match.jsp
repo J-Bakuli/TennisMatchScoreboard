@@ -36,7 +36,7 @@
             <div class="form-container center">
                 <form method="post" action="#">
                     <c:if test="${not empty errorMessage}">
-                        <p style="color: red;">${errorMessage}</p>
+                        <p class="error-message">${errorMessage}</p>
                     </c:if>
                     <label class="label-player" for="playerOne">Player one</label>
                     <input id="playerOne" name="player1Name" class="input-player" placeholder="Name" type="text" required title="Enter a name">
