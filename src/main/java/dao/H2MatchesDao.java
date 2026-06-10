@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.entity.FinishedMatchEntity;
 import util.HibernateUtil;
+import util.PlayerUtils;
 import validation.MatchValidation;
 
 import java.util.List;
@@ -22,6 +23,14 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     "JOIN FETCH m.player2 " +
                     "JOIN FETCH m.winner " +
                     "ORDER BY m.finishedAt DESC";
+
+    private static final String COUNT_ALL_MATCHES_BY_PLAYER_NAME =
+            "SELECT COUNT (m) FROM FinishedMatchEntity m " +
+                    "JOIN m.player1 p1 " +
+                    "JOIN m.player2 p2 " +
+                    "WHERE (:pattern IS NULL " +
+                    "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
+                    "OR LOWER(p2.name) LIKE LOWER(:pattern))";
 
     @Override
     public FinishedMatch save(OngoingMatch ongoingMatch) {
@@ -63,8 +72,30 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         }
     }
 
+    /**
+     * Counts finished matches where player1 or player2 name matches the pattern.
+     * If playerName is null or blank, returns total count of all matches.
+     */
     @Override
-    public Integer countAll() {
-        return null;
+    public Integer countMatchesByPlayerName(String playerName) {
+        log.debug("Counting all finished matches by {}", playerName);
+
+        String pattern = bringToPattern(playerName);
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
+                    .setParameter("pattern", pattern)
+                    .getSingleResult()
+                    .intValue();
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to count finished matches by player name", e);
+        }
+    }
+
+    private String bringToPattern(String playerName) {
+        if (playerName == null || playerName.isBlank()) {
+            return null;
+        }
+        return "%" + PlayerUtils.normalizeInput(playerName) + "%";
     }
 }

@@ -10,5 +10,5 @@ public interface MatchesDao {
 
     List<FinishedMatch> findAll();
 
-    Integer countAll();
+    Integer countMatchesByPlayerName(String playerName);
 }
