@@ -3,11 +3,14 @@ package service;
 import dao.MatchesDao;
 import dao.PlayerDao;
 import dto.FinishedMatchDto;
+import dto.FinishedMatchesPageDto;
 import exception.DatabaseException;
 import exception.NotFoundException;
 import model.FinishedMatch;
 import model.OngoingMatch;
+import util.MatchesQueryUtils;
 import validation.MatchValidation;
+import validation.MatchesQueryValidation;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +19,7 @@ import java.util.List;
 
 public class FinishedMatchesService {
     private static final DateTimeFormatter FINISHED_AT_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
     private final PlayerDao playerDao;
 
@@ -29,9 +33,27 @@ public class FinishedMatchesService {
         matchesDao.save(ongoingMatch);
     }
 
-    public List<FinishedMatchDto> getAllFinishedMatches() {
-        List<FinishedMatch> finishedMatches = matchesDao.findAllMatches();
+    public FinishedMatchesPageDto getFinishedMatchesPage(String pageParam, String playerNameParam) {
+        int page = MatchesQueryValidation.parsePage(pageParam);
+        String playerNameFilter = MatchesQueryUtils.normalizeFilter(playerNameParam);
+        int totalCount = playerNameFilter == null ? matchesDao.countAllMatches() : matchesDao.countMatchesByPlayerName(playerNameFilter);
+        int totalPages = totalCount == 0 ? 0 : (int) Math.ceil((double) totalCount / PAGE_SIZE);
+        if (totalPages > 0 && page > totalPages) {
+            page = totalPages;
+        }
+        int offset = getOffset(page);
+        List<FinishedMatchDto> matches =
+                playerNameFilter == null ?
+                        toDto(matchesDao.findAllMatches(offset, PAGE_SIZE)) :
+                        toDto(matchesDao.findMatchesByPlayerName(playerNameFilter, offset, PAGE_SIZE));
 
+        boolean hasPrevious = page > 1;
+        boolean hasNext = page < totalPages;
+
+        return new FinishedMatchesPageDto(matches, page, totalPages, playerNameParam, hasPrevious, hasNext);
+    }
+
+    private List<FinishedMatchDto> toDto(List<FinishedMatch> finishedMatches) {
         if (finishedMatches.isEmpty()) {
             return Collections.emptyList();
         }
@@ -62,5 +84,9 @@ public class FinishedMatchesService {
             throw new DatabaseException(
                     String.format("Failed to resolve %s name for finished match, playerId=%s", role, playerId), e);
         }
+    }
+
+    private int getOffset(int page) {
+        return (page - 1) * PAGE_SIZE;
     }
 }
