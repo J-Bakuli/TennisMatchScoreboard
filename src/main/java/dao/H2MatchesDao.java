@@ -72,30 +72,31 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         }
     }
 
-    /**
-     * Counts finished matches where player1 or player2 name matches the pattern.
-     * If playerName is null or blank, returns total count of all matches.
-     */
+    @Override
+    public Integer countAllMatches() {
+        log.debug("Counting all finished matches");
+        return countByPattern(null);
+    }
+
     @Override
     public Integer countMatchesByPlayerName(String playerName) {
         log.debug("Counting all finished matches by {}", playerName);
-
         String pattern = bringToPattern(playerName);
+        return countByPattern(pattern);
+    }
 
+    private Integer countByPattern(String pattern) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
         } catch (Exception e) {
-            throw new DatabaseException("Failed to count finished matches by player name", e);
+            throw new DatabaseException("Failed to count finished matches", e);
         }
     }
 
     private String bringToPattern(String playerName) {
-        if (playerName == null || playerName.isBlank()) {
-            return null;
-        }
         return "%" + PlayerUtils.normalizeInput(playerName) + "%";
     }
 }
