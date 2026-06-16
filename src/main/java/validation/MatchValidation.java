@@ -19,6 +19,16 @@ public class MatchValidation {
         }
     }
 
+    public static UUID parseUuid(String uuid) {
+        UUID parsed;
+        try {
+            parsed = UUID.fromString(uuid.trim());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("uuid has an invalid format");
+        }
+        return parsed;
+    }
+
     public static void validateWinner(String winner) {
         if (winner == null) {
             throw new ValidationException("winner cannot be null");

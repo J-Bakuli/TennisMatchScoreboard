@@ -23,7 +23,7 @@ public class OngoingMatchService {
 
     public OngoingMatch findOngoingMatch(String uuidToConvert) {
         MatchValidation.validateMatchUuid(uuidToConvert);
-        UUID uuid = UUID.fromString(uuidToConvert);
+        UUID uuid = MatchValidation.parseUuid(uuidToConvert);
         return ongoingMatchDao.findByUuid(uuid);
     }
 
@@ -64,7 +64,7 @@ public class OngoingMatchService {
 
     public void finishOngoingMatch(String uuidToConvert) {
         MatchValidation.validateMatchUuid(uuidToConvert);
-        UUID uuid = UUID.fromString(uuidToConvert);
+        UUID uuid = MatchValidation.parseUuid(uuidToConvert);
         ongoingMatchDao.removeByUuid(uuid);
     }
 }
