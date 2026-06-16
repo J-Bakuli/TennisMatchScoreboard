@@ -35,14 +35,21 @@
         <c:if test="${not empty errorMessage}">
             <p class="error-message">${errorMessage}</p>
         </c:if>
-        <div class="input-container">
-            <input class="input-filter" placeholder="Filter by name" type="text" />
-            <div>
-                <a href="#">
-                    <button class="btn-filter">Reset Filter</button>
-                </a>
-            </div>
+<div class="input-container">
+    <form method="get" action="${pageContext.request.contextPath}/matches" class="form-matches">
+        <input
+                class="input-filter"
+                name="filter_by_player_name"
+                placeholder="Filter by name"
+                type="text"
+                value="${matchesPage.filterByPlayerName}"
+        />
+        <div class="filter-actions">
+            <button type="submit" class="btn-filter">Apply Filter</button>
+            <a class="btn-filter" href="${pageContext.request.contextPath}/matches">Reset Filter</a>
         </div>
+    </form>
+</div>
 
         <table class="table-matches">
             <thead>
