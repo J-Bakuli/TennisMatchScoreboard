@@ -5,7 +5,6 @@ import model.MatchState;
 import model.OngoingMatch;
 import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
-import validation.MatchValidation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +29,6 @@ public final class H2FinishedMatchMapper {
     }
 
     public static FinishedMatchEntity toEntity(OngoingMatch ongoingMatch) {
-        MatchValidation.validateOngoingMatch(ongoingMatch);
         MatchState matchState = ongoingMatch.getMatchState();
 
         FinishedMatchEntity entity = new FinishedMatchEntity();

@@ -36,6 +36,7 @@ public class NewMatchService {
     private Player findOrCreatePlayer(String playerName) {
         Player player;
         try {
+            PlayerValidation.validatePlayerName(playerName);
             player = playerDao.findByName(playerName);
             log.info("Player with name={} already exists", playerName);
         } catch (NotFoundException e) {

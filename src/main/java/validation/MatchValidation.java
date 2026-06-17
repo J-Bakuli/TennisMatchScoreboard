@@ -51,18 +51,15 @@ public class MatchValidation {
         }
 
         UUID uuid = ongoingMatch.getUuid();
-        Integer player1 = ongoingMatch.getPlayer1();
-        Integer player2 = ongoingMatch.getPlayer2();
+        Integer player1Id = ongoingMatch.getPlayer1();
+        Integer player2Id = ongoingMatch.getPlayer2();
         MatchState matchState = ongoingMatch.getMatchState();
-        Integer winner = matchState.getWinnerPlayerId();
+        Integer winnerId = matchState.getWinnerPlayerId();
 
-        if (uuid == null) {
-            throw new ValidationException("ongoingMatch uuid cannot be null");
-        }
-
+        validateNotNullId(uuid, player1Id, player2Id, winnerId);
         validateMatchState(matchState);
-        validatePlayersConsistency(player1, player2, matchState);
-        validateWinnerConsistency(winner, player1, player2, matchState);
+        validatePlayersConsistency(player1Id, player2Id, matchState);
+        validateWinnerConsistency(winnerId, player1Id, player2Id, matchState);
     }
 
     public static void validateMatchState(MatchState matchState) {
@@ -71,6 +68,24 @@ public class MatchValidation {
         }
         validateNonNegativeScores(matchState);
         validateFinishedStateConsistency(matchState);
+    }
+
+    private static void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id, Integer winnerId) {
+        if (uuid == null) {
+            throw new ValidationException("ongoingMatch uuid cannot be null");
+        }
+
+        if (player1Id == null) {
+            throw new ValidationException("player1Id cannot be null");
+        }
+
+        if (player2Id == null) {
+            throw new ValidationException("player2Id cannot be null");
+        }
+
+        if (winnerId == null) {
+            throw new ValidationException("winnerId cannot be null");
+        }
     }
 
     private static void validateNonNegativeScores(MatchState matchState) {
