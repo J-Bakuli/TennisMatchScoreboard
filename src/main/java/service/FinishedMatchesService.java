@@ -4,6 +4,8 @@ import dao.MatchesDao;
 import dto.FinishedMatchDto;
 import dto.FinishedMatchesPageDto;
 import model.OngoingMatch;
+import model.PageContext;
+import model.UrlNavigation;
 import util.MatchesQueryUtils;
 import validation.MatchValidation;
 import validation.MatchesQueryValidation;
@@ -27,26 +29,45 @@ public class FinishedMatchesService {
     }
 
     public FinishedMatchesPageDto getFinishedMatchesPage(String pageParam, String playerNameParam) {
+        String normalizedPlayerName = MatchesQueryUtils.normalizeFilter(playerNameParam);
+        PageContext context = buildPageContext(pageParam, normalizedPlayerName);
+        List<FinishedMatchDto> matchesDto = findMatchesForPage(context);
+        UrlNavigation navigation = buildPaginationNavigation(context, playerNameParam);
+
+        return new FinishedMatchesPageDto(
+                matchesDto,
+                context.page(),
+                context.totalPages(),
+                playerNameParam,
+                navigation.previousPageUrl(),
+                navigation.nextPageUrl());
+    }
+
+    private PageContext buildPageContext(String pageParam, String playerNameFilter) {
         int page = MatchesQueryValidation.parsePage(pageParam);
-        String playerNameFilter = MatchesQueryUtils.normalizeFilter(playerNameParam);
-        int totalCount = playerNameFilter == null ? matchesDao.countAllMatches() : matchesDao.countMatchesByPlayerName(playerNameFilter);
-        int totalPages = totalCount == 0 ? 0 : (int) Math.ceil((double) totalCount / PAGE_SIZE);
+        int totalMatches = calculateTotalMatches(playerNameFilter);
+        int totalPages = totalMatches == 0 ? 0 : (int) Math.ceil((double) totalMatches / PAGE_SIZE);
         if (totalPages > 0 && page > totalPages) {
             page = totalPages;
         }
-        int offset = getOffset(page);
-        List<FinishedMatchDto> matches =
-                playerNameFilter == null ?
-                        matchesDao.findAllMatches(offset, PAGE_SIZE) :
-                        matchesDao.findMatchesByPlayerName(playerNameFilter, offset, PAGE_SIZE);
-
-        String previousPageUrl = page > 1 ? buildPageUrl(page - 1, playerNameParam) : null;
-        String nextPageUrl = page < totalPages ? buildPageUrl(page + 1, playerNameParam) : null;
-
-        return new FinishedMatchesPageDto(matches, page, totalPages, playerNameParam, previousPageUrl, nextPageUrl);
+        return new PageContext(page, totalPages, playerNameFilter);
     }
 
-    private String buildPageUrl(int targetPage, String playerNameParam) {
+    private List<FinishedMatchDto> findMatchesForPage(PageContext context) {
+        int offset = calculatePageOffset(context.page());
+        return context.playerNameFilter() == null ?
+                matchesDao.findAllMatches(offset, PAGE_SIZE) :
+                matchesDao.findMatchesByPlayerName(context.playerNameFilter(), offset, PAGE_SIZE);
+    }
+
+    private UrlNavigation buildPaginationNavigation(PageContext context, String playerNameParam) {
+        int page = context.page();
+        String previousPageUrl = page > 1 ? buildMatchesPageUrl(page - 1, playerNameParam) : null;
+        String nextPageUrl = page < context.totalPages() ? buildMatchesPageUrl(page + 1, playerNameParam) : null;
+        return new UrlNavigation(previousPageUrl, nextPageUrl);
+    }
+
+    private String buildMatchesPageUrl(int targetPage, String playerNameParam) {
         StringBuilder url = new StringBuilder(MATCHES_PATH)
                 .append("?page=")
                 .append(targetPage);
@@ -59,7 +80,11 @@ public class FinishedMatchesService {
         return url.toString();
     }
 
-    private int getOffset(int page) {
+    private int calculatePageOffset(int page) {
         return (page - 1) * PAGE_SIZE;
+    }
+
+    private int calculateTotalMatches(String playerNameFilter) {
+        return playerNameFilter == null ? matchesDao.countAllMatches() : matchesDao.countMatchesByPlayerName(playerNameFilter);
     }
 }
