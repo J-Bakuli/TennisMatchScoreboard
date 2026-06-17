@@ -6,6 +6,7 @@ import dto.FinishedMatchDto;
 import dto.FinishedMatchesPageDto;
 import exception.DatabaseException;
 import exception.NotFoundException;
+import mapper.FinishedMatchDtoMapper;
 import model.FinishedMatch;
 import model.OngoingMatch;
 import util.MatchesQueryUtils;
@@ -14,13 +15,10 @@ import validation.MatchesQueryValidation;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
 public class FinishedMatchesService {
-    private static final DateTimeFormatter FINISHED_AT_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private static final String MATCHES_PATH = "/matches";
     private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
@@ -63,21 +61,18 @@ public class FinishedMatchesService {
 
         return finishedMatches.stream()
                 .map(match -> {
-                    LocalDateTime finishedAt = match.getFinishedAt();
-                    String finishedAtFormatted = finishedAt.format(FINISHED_AT_FORMATTER);
                     String player1Name = resolvePlayerNameById(match.getPlayer1Id(), "player1");
                     String player2Name = resolvePlayerNameById(match.getPlayer2Id(), "player2");
                     String winnerName = resolvePlayerNameById(match.getWinnerId(), "winner");
 
-                    return new FinishedMatchDto(
+                    return FinishedMatchDtoMapper.toDto(
+                            match,
                             player1Name,
                             player2Name,
-                            winnerName,
-                            finishedAt,
-                            finishedAtFormatted
+                            winnerName
                     );
                 })
-                .toList(); //Todo оптимизировать позже
+                .toList();
     }
 
     private String resolvePlayerNameById(Integer playerId, String role) {
