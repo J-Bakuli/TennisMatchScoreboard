@@ -42,7 +42,8 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void validateFinishedStateTest() {
-        state.setFinished(true);
+        winSetSixToZero(state, 1);
+        winSetSixToZero(state, 1);
         Assertions.assertThrows(ValidationException.class, () -> service.calculate(state, 1));
     }
 
@@ -55,8 +56,7 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void shouldAwardGameAndResetGamePointsWhenPlayerWinsFromThreePointsTest() {
-        state.setPlayer1PointsInGame(3);
-        state.setPlayer2PointsInGame(0);
+        awardPoints(state, 1, 3);
         MatchScoreResult result = service.calculate(state, 1);
         Assertions.assertEquals(1, result.getState().getPlayer1GamesInSet());
         Assertions.assertEquals(0, result.getState().getPlayer1PointsInGame());
@@ -66,8 +66,8 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void advantageLessThan2ShouldNotFinishGameTest() {
-        state.setPlayer1PointsInGame(3);
-        state.setPlayer2PointsInGame(3);
+        awardPoints(state, 1, 3);
+        awardPoints(state, 2, 3);
 
         MatchScoreResult result = service.calculate(state, 1);
 
@@ -79,8 +79,9 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void shouldAwardGameWhenLeadBecomesTwoAfterAdvantageTest() {
-        state.setPlayer1PointsInGame(4);
-        state.setPlayer2PointsInGame(3);
+        awardPoints(state, 1, 3);
+        awardPoints(state, 2, 3);
+        state.awardPointTo(1);
 
         MatchScoreResult result = service.calculate(state, 1);
 
@@ -92,8 +93,7 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void sixSixShouldStartTieBreakTest() {
-        state.setPlayer1GamesInSet(6);
-        state.setPlayer2GamesInSet(6);
+        reachGamesSixSix(state);
 
         MatchScoreResult result = service.calculate(state, 1);
 
@@ -102,9 +102,9 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void tieBreakWinEightToSixShouldAwardSetTest() {
-        setTieBreakAtSixSix(state);
-        state.setPlayer1TieBreakPoints(6);
-        state.setPlayer2TieBreakPoints(6);
+        startTieBreakAtGamesSixSix(state);
+        awardPoints(state, 1, 6);
+        awardPoints(state, 2, 6);
 
         MatchScoreResult resultAfterSevenSix = service.calculate(state, 1);
         Assertions.assertEquals(0, resultAfterSevenSix.getState().getPlayer1Sets());
@@ -119,9 +119,9 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void tieBreakShouldNotFinishWithoutTwoPointsDifferenceTest() {
-        setTieBreakAtSixSix(state);
-        state.setPlayer1TieBreakPoints(6);
-        state.setPlayer2TieBreakPoints(6);
+        startTieBreakAtGamesSixSix(state);
+        awardPoints(state, 1, 6);
+        awardPoints(state, 2, 6);
 
         MatchScoreResult result = service.calculate(state, 1);
 
@@ -132,11 +132,12 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void shouldFinishMatchAtTwoSetsToZeroTest() {
-        state.setPlayer1Sets(1);
-        state.setPlayer1GamesInSet(5);
-        state.setPlayer2GamesInSet(0);
-        state.setPlayer1PointsInGame(3);
-        state.setPlayer2PointsInGame(0);
+        winSetSixToZero(state, 1);
+        for (int i = 0; i < 5; i++) {
+            winGame(state, 1);
+        }
+        awardPoints(state, 1, 3);
+
         MatchScoreResult result = service.calculate(state, 1);
         Assertions.assertTrue(result.isFinished());
         Assertions.assertEquals(1, result.getWinnerPlayerId());
@@ -144,12 +145,12 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void shouldFinishMatchAtTwoSetsToOneTest() {
-        state.setPlayer1Sets(1);
-        state.setPlayer2Sets(1);
-        state.setPlayer1GamesInSet(0);
-        state.setPlayer2GamesInSet(5);
-        state.setPlayer1PointsInGame(0);
-        state.setPlayer2PointsInGame(3);
+        winSetSixToZero(state, 1);
+        winSetSixToZero(state, 2);
+        for (int i = 0; i < 5; i++) {
+            winGame(state, 2);
+        }
+        awardPoints(state, 2, 3);
 
         MatchScoreResult result = service.calculate(state, 2);
 
@@ -160,14 +161,35 @@ public class MatchScoreCalculationTest {
     }
 
     private MatchState basicMatchState() {
-        Integer player1Id = 1;
-        Integer player2Id = 2;
-        return new MatchState(player1Id, player2Id);
+        return new MatchState(1, 2);
     }
 
-    private void setTieBreakAtSixSix(MatchState state) {
-        state.setPlayer1GamesInSet(6);
-        state.setPlayer2GamesInSet(6);
-        state.setTieBreak(true);
+    private void awardPoints(MatchState state, int playerId, int count) {
+        for (int i = 0; i < count; i++) {
+            state.awardPointTo(playerId);
+        }
+    }
+
+    private void winGame(MatchState state, int playerId) {
+        awardPoints(state, playerId, 4);
+    }
+
+    private void winSetSixToZero(MatchState state, int playerId) {
+        for (int i = 0; i < 6; i++) {
+            winGame(state, playerId);
+        }
+    }
+
+    private void reachGamesSixSix(MatchState state) {
+        for (int i = 0; i < 5; i++) {
+            winGame(state, 1);
+            winGame(state, 2);
+        }
+        winGame(state, 1);
+        winGame(state, 2);
+    }
+
+    private void startTieBreakAtGamesSixSix(MatchState state) {
+        reachGamesSixSix(state);
     }
 }
