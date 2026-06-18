@@ -21,7 +21,7 @@ public class OngoingMatchDaoTest {
     public void saveOngoingMatchTest() {
         UUID uuid = UUID.randomUUID();
         MatchState basicMatchState = createbasicMatchState();
-        OngoingMatch saved = ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState,null));
+        OngoingMatch saved = ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState));
 
         Assertions.assertEquals(uuid, saved.getUuid());
         Assertions.assertEquals(1, saved.getPlayer1());
@@ -32,7 +32,7 @@ public class OngoingMatchDaoTest {
     public void findByUuidTest() {
         UUID uuid = UUID.randomUUID();
         MatchState basicMatchState = createbasicMatchState();
-        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState, null));
+        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState));
 
         OngoingMatch found = ongoingMatchDao.findByUuid(uuid);
         Assertions.assertEquals(uuid, found.getUuid());
@@ -49,7 +49,7 @@ public class OngoingMatchDaoTest {
     public void removeByUuidTest() {
         UUID uuid = UUID.randomUUID();
         MatchState basicMatchState = createbasicMatchState();
-        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState, null));
+        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState));
 
         ongoingMatchDao.removeByUuid(uuid);
 

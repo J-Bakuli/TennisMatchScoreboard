@@ -46,8 +46,8 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     public FinishedMatch save(OngoingMatch ongoingMatch) {
         MatchValidation.validateOngoingMatch(ongoingMatch);
 
-        log.debug("Saving ongoingMatch as it is finished: uuid={}, player1={}, player2={}, matchState={}, winner={}", ongoingMatch.getUuid(),
-                ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState(), ongoingMatch.getWinner());
+        log.debug("Saving ongoingMatch as it is finished: uuid={}, player1={}, player2={}, matchState={}", ongoingMatch.getUuid(),
+                ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState());
 
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

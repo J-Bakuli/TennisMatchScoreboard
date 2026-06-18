@@ -136,10 +136,6 @@ public class MatchValidation {
         if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
             throw new ValidationException("winner must be one of ongoing match players");
         }
-
-        if (winner != null && !Objects.equals(winner, matchState.getWinnerPlayerId())) {
-            throw new ValidationException("existing winner from ongoingMatch must be the same as that from matchState");
-        }
     }
 
     private static void validateFinishedStateConsistency(MatchState matchState) {

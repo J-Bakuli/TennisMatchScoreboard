@@ -48,7 +48,6 @@ public class MatchScoreServlet extends BaseServlet {
         req.setAttribute("player2Name", ongoingMatchService.findPlayerNameByOngoingMatch(ongoingMatch, PlayerSide.PLAYER2));
         req.setAttribute("player1", ongoingMatch.getPlayer1());
         req.setAttribute("player2", ongoingMatch.getPlayer2());
-        req.setAttribute("winner", ongoingMatch.getWinner());
         req.getRequestDispatcher("/WEB-INF/views/match-score.jsp").forward(req, resp);
     }
 
