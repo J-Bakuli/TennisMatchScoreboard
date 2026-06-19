@@ -1,6 +1,7 @@
 package model;
 
 import exception.ValidationException;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter
@@ -11,91 +12,71 @@ public class MatchState {
     private int player2Sets;
     private int player1GamesInSet;
     private int player2GamesInSet;
-    private int player1PointsInGame;
-    private int player2PointsInGame;
     private boolean tieBreak;
-    private int player1TieBreakPoints;
-    private int player2TieBreakPoints;
     private boolean finished;
     private Integer winnerPlayerId;
+
+    @Getter(AccessLevel.NONE)
+    private final RegularGameScore regularGame = new RegularGameScore();
+
+    @Getter(AccessLevel.NONE)
+    private final TieBreakScore tieBreakScore = new TieBreakScore();
 
     public MatchState(Integer player1Id, Integer player2Id) {
         this.player1Id = player1Id;
         this.player2Id = player2Id;
     }
 
+    public int getPlayer1PointsInGame() {
+        return regularGame.getPlayer1PointsInGame();
+    }
+
+    public int getPlayer2PointsInGame() {
+        return regularGame.getPlayer2PointsInGame();
+    }
+
+    public int getPlayer1TieBreakPoints() {
+        return tieBreakScore.getPlayer1TieBreakPoints();
+    }
+
+    public int getPlayer2TieBreakPoints() {
+        return tieBreakScore.getPlayer2TieBreakPoints();
+    }
+
     public void awardPointTo(Integer pointWinnerPlayerId) {
-        applyPoint(pointWinnerPlayerId);
+        boolean isPlayer1 = isPlayer1Winner(pointWinnerPlayerId);
+        if (tieBreak) {
+            tieBreakScore.awardPointTo(isPlayer1);
+        } else {
+            regularGame.awardPointTo(isPlayer1);
+        }
         processGameTransition(pointWinnerPlayerId);
         processSetTransition();
         processMatchFinish();
     }
 
-    private void applyPoint(Integer pointWinnerPlayerId) {
-        if (tieBreak) {
-            applyTieBreakPoint(pointWinnerPlayerId);
-        } else {
-            applyRegularGamePoint(pointWinnerPlayerId);
-        }
-    }
-
-    private void applyTieBreakPoint(Integer pointWinnerPlayerId) {
+    private boolean isPlayer1Winner(Integer pointWinnerPlayerId) {
         if (pointWinnerPlayerId.equals(player1Id)) {
-            player1TieBreakPoints++;
-        } else if (pointWinnerPlayerId.equals(player2Id)) {
-            player2TieBreakPoints++;
-        } else {
-            throw new ValidationException("Point winner is not part of this match.");
+            return true;
         }
-    }
-
-    private void applyRegularGamePoint(Integer pointWinnerPlayerId) {
-        if (pointWinnerPlayerId.equals(player1Id)) {
-            player1PointsInGame++;
-        } else if (pointWinnerPlayerId.equals(player2Id)) {
-            player2PointsInGame++;
-        } else {
-            throw new ValidationException("Point winner is not part of this match.");
+        if (pointWinnerPlayerId.equals(player2Id)) {
+            return false;
         }
+        throw new ValidationException("Point winner is not part of this match.");
     }
 
     private void processGameTransition(Integer pointWinnerPlayerId) {
         if (tieBreak) {
-            if (isTieBreakFinished()) {
+            if (tieBreakScore.isFinished()) {
                 awardGameToPointWinner(pointWinnerPlayerId);
             }
             return;
         }
 
-        if (isRegularGameFinished()) {
+        if (regularGame.isFinished()) {
             awardGameToPointWinner(pointWinnerPlayerId);
-            resetRegularGamePoints();
+            regularGame.reset();
         }
-    }
-
-    private boolean isRegularGameFinished() {
-        return (player1PointsInGame >= 4 || player2PointsInGame >= 4)
-                && Math.abs(player1PointsInGame - player2PointsInGame) >= 2;
-    }
-
-    private boolean isTieBreakFinished() {
-        return (player1TieBreakPoints >= 7 || player2TieBreakPoints >= 7)
-                && Math.abs(player1TieBreakPoints - player2TieBreakPoints) >= 2;
-    }
-
-    private void awardGameToPointWinner(Integer pointWinnerPlayerId) {
-        if (pointWinnerPlayerId.equals(player1Id)) {
-            player1GamesInSet++;
-        } else if (pointWinnerPlayerId.equals(player2Id)) {
-            player2GamesInSet++;
-        } else {
-            throw new ValidationException("Point winner is not part of this match.");
-        }
-    }
-
-    private void resetRegularGamePoints() {
-        player1PointsInGame = 0;
-        player2PointsInGame = 0;
     }
 
     private void processSetTransition() {
@@ -131,6 +112,16 @@ public class MatchState {
         }
     }
 
+    private void awardGameToPointWinner(Integer pointWinnerPlayerId) {
+        if (pointWinnerPlayerId.equals(player1Id)) {
+            player1GamesInSet++;
+        } else if (pointWinnerPlayerId.equals(player2Id)) {
+            player2GamesInSet++;
+        } else {
+            throw new ValidationException("Point winner is not part of this match.");
+        }
+    }
+
     private void awardSetToSetWinner() {
         if (player1GamesInSet > player2GamesInSet) {
             player1Sets++;
@@ -144,10 +135,8 @@ public class MatchState {
     private void resetSetState() {
         player1GamesInSet = 0;
         player2GamesInSet = 0;
-        player1PointsInGame = 0;
-        player2PointsInGame = 0;
+        regularGame.reset();
         tieBreak = false;
-        player1TieBreakPoints = 0;
-        player2TieBreakPoints = 0;
+        tieBreakScore.reset();
     }
 }
