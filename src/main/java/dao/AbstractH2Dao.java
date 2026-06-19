@@ -2,14 +2,19 @@ package dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 @Slf4j
 public class AbstractH2Dao {
     protected boolean isDuplicate(Exception e) {
-        Throwable cause = e.getCause();
-        return cause != null
-                && cause.getMessage() != null
-                && cause.getMessage().toLowerCase().contains("unique");
+        Throwable t = e;
+        while (t != null) {
+            if (t instanceof ConstraintViolationException) {
+                return true;
+            }
+            t = t.getCause();
+        }
+        return false;
     }
 
     protected void rollbackSafely(Transaction tx, Exception originalError) {
