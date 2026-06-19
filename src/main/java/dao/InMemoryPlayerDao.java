@@ -21,12 +21,12 @@ public class InMemoryPlayerDao implements PlayerDao {
             throw new ValidationException("Player must not be null.");
         }
 
-        String rawName = player.getName();
+        String rawName = player.name();
         PlayerValidation.validatePlayerName(rawName);
         String normalizedName = PlayerUtils.normalizeName(rawName);
 
         boolean alreadyExists = players.values().stream()
-                .anyMatch(existingPlayer -> normalizedName.equals(existingPlayer.getName()));
+                .anyMatch(existingPlayer -> normalizedName.equals(existingPlayer.name()));
 
         if (alreadyExists) {
             throw new AlreadyExistsException("Player with name=" + normalizedName + " already exists.");
@@ -44,7 +44,7 @@ public class InMemoryPlayerDao implements PlayerDao {
         PlayerValidation.validatePlayerName(name);
         String normalizedName = PlayerUtils.normalizeName(name);
         return players.values().stream().filter(
-                        player -> normalizedName.equals(player.getName()))
+                        player -> normalizedName.equals(player.name()))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Player not found by name=" + name));
     }

@@ -44,7 +44,7 @@ public class OngoingMatchService {
         PlayerValidation.validatePlayerId(id);
         Player player = playerDao.findById(id);
         PlayerValidation.validatePlayerForRead(player);
-        return player.getName();
+        return player.name();
     }
 
     public Integer findWinnerPlayerId(String winner, OngoingMatch ongoingMatch) {

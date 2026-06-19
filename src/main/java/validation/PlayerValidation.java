@@ -10,7 +10,7 @@ public class PlayerValidation {
             throw new ValidationException("Player cannot be null");
         }
 
-        validatePlayerName(player.getName());
+        validatePlayerName(player.name());
     }
 
     public static void validatePlayerForRead(Player player) {
@@ -18,8 +18,8 @@ public class PlayerValidation {
             throw new ValidationException("Player cannot be null");
         }
 
-        validatePlayerId(player.getId());
-        validatePlayerName(player.getName());
+        validatePlayerId(player.id());
+        validatePlayerName(player.name());
     }
 
     public static void validatePlayerNames(String name1, String name2) {

@@ -25,10 +25,10 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             throw new ValidationException("Player must not be null.");
         }
 
-        PlayerValidation.validatePlayerName(player.getName());
-        String normalizedName = PlayerUtils.normalizeName(player.getName());
+        PlayerValidation.validatePlayerName(player.name());
+        String normalizedName = PlayerUtils.normalizeName(player.name());
 
-        log.debug("Saving player: id={}, name={} ", player.getId(), normalizedName);
+        log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
 
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {

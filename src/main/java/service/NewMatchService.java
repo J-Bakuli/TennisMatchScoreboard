@@ -27,8 +27,8 @@ public class NewMatchService {
         Player player1 = findOrCreatePlayer(player1Name);
         Player player2 = findOrCreatePlayer(player2Name);
         UUID matchId = UUID.randomUUID();
-        MatchState matchState = new MatchState(player1.getId(), player2.getId());
-        OngoingMatch ongoingMatch = new OngoingMatch(matchId, player1.getId(), player2.getId(), matchState);
+        MatchState matchState = new MatchState(player1.id(), player2.id());
+        OngoingMatch ongoingMatch = new OngoingMatch(matchId, player1.id(), player2.id(), matchState);
         ongoingMatchDao.save(ongoingMatch);
         return matchId;
     }
