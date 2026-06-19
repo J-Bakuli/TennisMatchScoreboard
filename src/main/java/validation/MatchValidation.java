@@ -67,7 +67,6 @@ public class MatchValidation {
             throw new ValidationException("matchState cannot be null");
         }
         validateNonNegativeScores(matchState);
-        validateFinishedStateConsistency(matchState);
     }
 
     private static void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
@@ -135,19 +134,6 @@ public class MatchValidation {
     private static void validateWinnerConsistency(Integer winner, Integer player1, Integer player2, MatchState matchState) {
         if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
             throw new ValidationException("winner must be one of ongoing match players");
-        }
-    }
-
-    private static void validateFinishedStateConsistency(MatchState matchState) {
-        boolean isFinished = matchState.isFinished();
-        Integer winnerPlayerId = matchState.getWinnerPlayerId();
-
-        if (isFinished && winnerPlayerId == null) {
-            throw new ValidationException("winnerPlayerId must be set if matchState is finished");
-        }
-
-        if (!isFinished && winnerPlayerId != null) {
-            throw new ValidationException("winnerPlayerId cannot be set until match is finished");
         }
     }
 }

@@ -138,9 +138,9 @@ public class MatchScoreCalculationTest {
         }
         awardPoints(state, 1, 3);
 
-        MatchScoreResult result = service.calculate(state, 1);
-        Assertions.assertTrue(result.isFinished());
-        Assertions.assertEquals(1, result.getWinnerPlayerId());
+        service.calculate(state, 1);
+        Assertions.assertTrue(state.isFinished());
+        Assertions.assertEquals(1, state.getWinnerPlayerId());
     }
 
     @Test
@@ -154,8 +154,8 @@ public class MatchScoreCalculationTest {
 
         MatchScoreResult result = service.calculate(state, 2);
 
-        Assertions.assertTrue(result.isFinished());
-        Assertions.assertEquals(2, result.getWinnerPlayerId());
+        Assertions.assertTrue(state.isFinished());
+        Assertions.assertEquals(2, state.getWinnerPlayerId());
         Assertions.assertEquals(2, result.getState().getPlayer2Sets());
         Assertions.assertEquals(1, result.getState().getPlayer1Sets());
     }

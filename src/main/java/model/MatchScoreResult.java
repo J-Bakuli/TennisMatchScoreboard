@@ -1,12 +1,10 @@
 package model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MatchScoreResult {
-    private MatchState state;
-    private boolean finished;
-    private Integer winnerPlayerId;
+    private final MatchState state;
 }

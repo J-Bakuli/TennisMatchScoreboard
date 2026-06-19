@@ -6,15 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class MatchState {
-    private Integer player1Id;
-    private Integer player2Id;
+    private final Integer player1Id;
+    private final Integer player2Id;
     private int player1Sets;
     private int player2Sets;
     private int player1GamesInSet;
     private int player2GamesInSet;
     private boolean tieBreak;
-    private boolean finished;
-    private Integer winnerPlayerId;
 
     @Getter(AccessLevel.NONE)
     private final RegularGameScore regularGame = new RegularGameScore();
@@ -43,6 +41,20 @@ public class MatchState {
         return tieBreakScore.getPlayer2TieBreakPoints();
     }
 
+    public boolean isFinished() {
+        return player1Sets == 2 || player2Sets == 2;
+    }
+
+    public Integer getWinnerPlayerId() {
+        if (player1Sets == 2) {
+            return player1Id;
+        }
+        if (player2Sets == 2) {
+            return player2Id;
+        }
+        return null;
+    }
+
     public void awardPointTo(Integer pointWinnerPlayerId) {
         boolean isPlayer1 = isPlayer1Winner(pointWinnerPlayerId);
         if (tieBreak) {
@@ -52,7 +64,6 @@ public class MatchState {
         }
         processGameTransition(pointWinnerPlayerId);
         processSetTransition();
-        processMatchFinish();
     }
 
     private boolean isPlayer1Winner(Integer pointWinnerPlayerId) {
@@ -100,16 +111,6 @@ public class MatchState {
 
     private boolean shouldStartTieBreak() {
         return player1GamesInSet == 6 && player2GamesInSet == 6 && !tieBreak;
-    }
-
-    private void processMatchFinish() {
-        if (player1Sets == 2) {
-            finished = true;
-            winnerPlayerId = player1Id;
-        } else if (player2Sets == 2) {
-            finished = true;
-            winnerPlayerId = player2Id;
-        }
     }
 
     private void awardGameToPointWinner(Integer pointWinnerPlayerId) {

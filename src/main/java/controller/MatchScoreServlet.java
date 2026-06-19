@@ -9,7 +9,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import model.MatchScoreResult;
 import model.MatchState;
 import model.OngoingMatch;
 import model.PlayerSide;
@@ -60,16 +59,15 @@ public class MatchScoreServlet extends BaseServlet {
         OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
         Integer winnerId = ongoingMatchService.findWinnerPlayerId(winner, ongoingMatch);
         MatchState matchState = ongoingMatch.getMatchState();
-        MatchScoreResult matchScoreResult;
 
         if (matchState.isFinished()) {
             resp.sendRedirect(req.getContextPath() + "/matches");
             return;
         } else {
-            matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
+            matchScoreCalculationService.calculate(matchState, winnerId);
         }
 
-        if (matchScoreResult.isFinished()) {
+        if (matchState.isFinished()) {
             finishedMatchesService.saveFinishedMatch(ongoingMatch);
             ongoingMatchService.finishOngoingMatch(uuid);
             resp.sendRedirect(req.getContextPath() + "/matches");

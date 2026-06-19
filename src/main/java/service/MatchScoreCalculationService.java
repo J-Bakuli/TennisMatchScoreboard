@@ -36,6 +36,6 @@ public class MatchScoreCalculationService {
     }
 
     private MatchScoreResult buildResult(MatchState state) {
-        return new MatchScoreResult(state, state.isFinished(), state.getWinnerPlayerId());
+        return new MatchScoreResult(state);
     }
 }
