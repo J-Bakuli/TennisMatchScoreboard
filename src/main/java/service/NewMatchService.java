@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
+import validation.MatchValidation;
 import validation.PlayerValidation;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class NewMatchService {
         UUID matchId = UUID.randomUUID();
         MatchState matchState = new MatchState(player1.id(), player2.id());
         OngoingMatch ongoingMatch = new OngoingMatch(matchId, player1.id(), player2.id(), matchState);
+        MatchValidation.validateOngoingMatch(ongoingMatch);
         ongoingMatchDao.save(ongoingMatch);
         return matchId;
     }
@@ -41,6 +43,7 @@ public class NewMatchService {
             log.info("Player with name={} already exists", playerName);
         } catch (NotFoundException e) {
             player = new Player(null, playerName);
+            PlayerValidation.validatePlayerForCreate(player);
             try {
                 player = playerDao.save(player);
             } catch (AlreadyExistsException ae) {

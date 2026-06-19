@@ -16,7 +16,6 @@ import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
 import util.HibernateUtil;
 import util.PlayerUtils;
-import validation.MatchValidation;
 
 import java.util.List;
 
@@ -44,8 +43,6 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     @Override
     public FinishedMatch save(OngoingMatch ongoingMatch) {
-        MatchValidation.validateOngoingMatch(ongoingMatch);
-
         log.debug("Saving ongoingMatch as it is finished: uuid={}, player1={}, player2={}, matchState={}", ongoingMatch.getUuid(),
                 ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState());
 

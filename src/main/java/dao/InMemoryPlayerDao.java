@@ -2,10 +2,8 @@ package dao;
 
 import exception.AlreadyExistsException;
 import exception.NotFoundException;
-import exception.ValidationException;
 import model.Player;
 import util.PlayerUtils;
-import validation.PlayerValidation;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +15,6 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        PlayerValidation.validatePlayerForCreate(player);
         String normalizedName = PlayerUtils.normalizeName(player.name());
 
         boolean alreadyExists = players.values().stream()
@@ -36,7 +33,6 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        PlayerValidation.validatePlayerName(name);
         String normalizedName = PlayerUtils.normalizeName(name);
         return players.values().stream().filter(
                         player -> normalizedName.equals(player.name()))
@@ -46,7 +42,6 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findById(Integer id) {
-        PlayerValidation.validatePlayerId(id);
         Player player = players.get(id);
         if (player == null) {
             throw new NotFoundException("Player not found for id=" + id);

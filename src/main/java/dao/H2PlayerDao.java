@@ -3,7 +3,6 @@ package dao;
 import exception.AlreadyExistsException;
 import exception.DatabaseException;
 import exception.NotFoundException;
-import exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
@@ -12,7 +11,6 @@ import org.hibernate.Transaction;
 import persistence.entity.PlayerEntity;
 import util.HibernateUtil;
 import util.PlayerUtils;
-import validation.PlayerValidation;
 
 @Slf4j
 public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
@@ -21,8 +19,6 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        PlayerValidation.validatePlayerForCreate(player);
-
         String normalizedName = PlayerUtils.normalizeName(player.name());
 
         log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
@@ -49,7 +45,6 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        PlayerValidation.validatePlayerName(name);
         String normalizedName = PlayerUtils.normalizeName(name);
 
         log.debug("Finding player by name: name={} ", normalizedName);
@@ -73,8 +68,6 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player findById(Integer id) {
-        PlayerValidation.validatePlayerId(id);
-
         log.debug("Finding player by id: id={} ", id);
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
