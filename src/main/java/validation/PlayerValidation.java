@@ -55,9 +55,9 @@ public class PlayerValidation {
             throw new ValidationException("playerName length must be between 2 and 20 characters");
         }
 
-        if (!normalizedName.matches("^[A-Za-z][A-Za-z\\s'-]{1,19}$")) {
+        if (!normalizedName.matches("^[a-z][a-z '-]{1,19}$")) {
             throw new ValidationException(
-                    "playerName must contain only Latin letters, spaces, apostrophes or hyphens"
+                    "playerName must contain only ASCII symbols"
             );
         }
     }
