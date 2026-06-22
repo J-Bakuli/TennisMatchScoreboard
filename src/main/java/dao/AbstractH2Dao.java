@@ -1,11 +1,16 @@
 package dao;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Transaction;
+import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
+import util.HibernateUtil;
 
 @Slf4j
 public class AbstractH2Dao {
+    protected Session session() {
+        return HibernateUtil.getSessionFactory().getCurrentSession();
+    }
+
     protected boolean isDuplicate(Exception e) {
         Throwable t = e;
         while (t != null) {
@@ -15,16 +20,5 @@ public class AbstractH2Dao {
             t = t.getCause();
         }
         return false;
-    }
-
-    protected void rollbackSafely(Transaction tx, Exception originalError) {
-        if (tx == null || !tx.isActive()) {
-            return;
-        }
-        try {
-            tx.rollback();
-        } catch (Exception rollbackError) {
-            log.warn("Rollback failed after original error: {}", originalError.getMessage(), rollbackError);
-        }
     }
 }

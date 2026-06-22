@@ -6,10 +6,7 @@ import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import persistence.entity.PlayerEntity;
-import util.HibernateUtil;
 import util.PlayerUtils;
 
 @Slf4j
@@ -23,18 +20,11 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
         log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
 
-        Transaction tx = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            tx = session.beginTransaction();
+        try {
             PlayerEntity playerEntity = H2PlayerMapper.toEntity(normalizedName);
-
-            session.persist(playerEntity);
-            tx.commit();
-
+            session().persist(playerEntity);
             return H2PlayerMapper.toPlayer(playerEntity);
         } catch (Exception e) {
-            rollbackSafely(tx, e);
-
             if (isDuplicate(e)) {
                 throw new AlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
             }
@@ -49,8 +39,8 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
         log.debug("Finding player by name: name={} ", normalizedName);
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            PlayerEntity playerEntity = session.createQuery(SELECT_BY_NAME, PlayerEntity.class)
+        try {
+            PlayerEntity playerEntity = session().createQuery(SELECT_BY_NAME, PlayerEntity.class)
                     .setParameter("name", normalizedName)
                     .uniqueResult();
 
@@ -70,8 +60,8 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
     public Player findById(Integer id) {
         log.debug("Finding player by id: id={} ", id);
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            PlayerEntity playerEntity = session.createQuery(SELECT_BY_ID, PlayerEntity.class)
+        try {
+            PlayerEntity playerEntity = session().createQuery(SELECT_BY_ID, PlayerEntity.class)
                     .setParameter("id", id)
                     .uniqueResult();
 

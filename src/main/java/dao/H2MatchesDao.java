@@ -9,12 +9,9 @@ import mapper.H2FinishedMatchMapper;
 import model.FinishedMatch;
 import model.MatchState;
 import model.OngoingMatch;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mapstruct.factory.Mappers;
 import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
-import util.HibernateUtil;
 import util.PlayerUtils;
 
 import java.util.List;
@@ -46,22 +43,16 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         log.debug("Saving ongoingMatch as it is finished: uuid={}, player1={}, player2={}, matchState={}", ongoingMatch.getUuid(),
                 ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState());
 
-        Transaction tx = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            tx = session.beginTransaction();
-
+        try {
             MatchState matchState = ongoingMatch.getMatchState();
-            PlayerEntity player1 = session.getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
-            PlayerEntity player2 = session.getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
-            PlayerEntity winner = session.getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
+            PlayerEntity player1 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
+            PlayerEntity player2 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
+            PlayerEntity winner = session().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
             FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
-            session.persist(finishedMatchEntity);
-            tx.commit();
+            session().persist(finishedMatchEntity);
 
             return H2FinishedMatchMapper.toFinishedMatch(finishedMatchEntity);
         } catch (Exception e) {
-            rollbackSafely(tx, e);
-
             if (isDuplicate(e)) {
                 throw new AlreadyExistsException("Finished match already exists.", e);
             }
@@ -97,8 +88,8 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     private Integer countByPattern(String pattern) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
+        try {
+            return session().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
@@ -108,8 +99,9 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     private List<FinishedMatchDto> findByPattern(String pattern, int offset, int limit) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            List<FinishedMatchEntity> matchEntities = session.createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatchEntity.class)
+        try {
+            List<FinishedMatchEntity> matchEntities = session()
+                    .createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatchEntity.class)
                     .setParameter("pattern", pattern)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
