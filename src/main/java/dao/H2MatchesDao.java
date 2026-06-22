@@ -6,7 +6,6 @@ import exception.DataAccessException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
-import model.FinishedMatch;
 import model.MatchState;
 import model.OngoingMatch;
 import org.mapstruct.factory.Mappers;
@@ -39,7 +38,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     "ORDER BY m.finishedAt DESC";
 
     @Override
-    public FinishedMatch save(OngoingMatch ongoingMatch) {
+    public void save(OngoingMatch ongoingMatch) {
         log.debug("Saving ongoingMatch as it is finished: uuid={}, player1={}, player2={}, matchState={}", ongoingMatch.getUuid(),
                 ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState());
 
@@ -50,8 +49,6 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
             PlayerEntity winner = session().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
             FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
             session().persist(finishedMatchEntity);
-
-            return H2FinishedMatchMapper.toFinishedMatch(finishedMatchEntity);
         } catch (Exception e) {
             if (isDuplicate(e)) {
                 throw new AlreadyExistsException("Finished match already exists.", e);
