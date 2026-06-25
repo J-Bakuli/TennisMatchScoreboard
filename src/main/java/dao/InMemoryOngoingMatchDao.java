@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class InMemoryOngoingMatchDao implements OngoingMatchDao {
     private final Map<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
+    // Лучше, чтобы метод сам создавал ID матча (по аналогии с репозиторием, работающим с БД) и возвращал его,
+        // а не принимал готовый ID в качестве аргумента.
     @Override
     public OngoingMatch save(OngoingMatch match) {
         ongoingMatches.put(match.getUuid(), match);

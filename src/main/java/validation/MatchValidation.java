@@ -9,6 +9,20 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class MatchValidation {
+
+    // Если класс задуман как утилитный, то стоит сделать его final, а его конструктор private.
+        // Можно использовать аннотацию @UtilityClass из Lombok
+
+    // Класс валидирует и парсит значение — это нарушает Принцип единой ответственности (SRP).
+        // Валидатор должен заниматься только валидацией.
+
+    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
+    // Класс должен заниматься только приходящими от пользователя данными.
+        // А доменная модель должна сама контролировать своё состояние и отвечать за его корректность.
+
+    // Метод не проверяет корректность формата UUID
     public static void validateMatchUuid(String uuid) {
         if (uuid == null) {
             throw new ValidationException("uuid cannot be null");
@@ -45,6 +59,7 @@ public class MatchValidation {
         }
     }
 
+    // Данные для создания OngoingMatch должны валидироваться только перед созданием объекта. Этот метод можно упразднить.
     public static void validateOngoingMatch(OngoingMatch ongoingMatch) {
         if (ongoingMatch == null) {
             throw new ValidationException("ongoingMatch cannot be null");
@@ -83,6 +98,7 @@ public class MatchValidation {
         }
     }
 
+    // Доменная модель должна сама контролировать своё состояние и запрещать его некорректные значения.
     private static void validateNonNegativeScores(MatchState matchState) {
         if (matchState.getPlayer1GamesInSet() < 0) {
             throw new ValidationException("player1GamesInSet cannot be negative");

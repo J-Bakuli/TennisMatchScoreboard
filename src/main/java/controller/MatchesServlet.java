@@ -14,10 +14,16 @@ import java.io.IOException;
 @WebServlet({"/matches"})
 @Slf4j
 public class MatchesServlet extends BaseServlet {
+
+    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
     private FinishedMatchesService finishedMatchesService;
 
     @Override
     public void init() throws ServletException {
+
+        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         finishedMatchesService = getRequiredAttribute(
                 AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
     }

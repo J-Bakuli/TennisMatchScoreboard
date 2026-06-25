@@ -4,6 +4,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public final class HibernateUtil {
+
+    // Можно использовать аннотацию @UtilityClass из Lombok
+
     private static final SessionFactory SESSION_FACTORY = buildSessionFactory();
 
     private HibernateUtil() {

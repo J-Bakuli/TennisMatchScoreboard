@@ -18,6 +18,9 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "players", indexes = @Index(name = "idx_players_name", columnList = "name"))
 public class PlayerEntity {
+
+    // Пакет entity можно разместить на одном уровне с другими пакетами (dao, model, dto и тд): persistence.entity —> entity
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,6 +28,9 @@ public class PlayerEntity {
     private String name;
 
     public PlayerEntity(String name) {
+
+        // В проекте уже есть валидация, которая проверяет имя на null, длину, формат и т.д.
+            // Проверка в конструкторе дублирует только часть этой логики. Достаточно оставить её только в одном месте.
         this.name = Objects.requireNonNull(name);
     }
 }

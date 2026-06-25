@@ -10,11 +10,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryPlayerDao implements PlayerDao {
+
+    // Класс не используется в проекте, поэтому его можно удалить.
+
     private final Map<Integer, Player> players = new ConcurrentHashMap<>();
     private final AtomicInteger nextId = new AtomicInteger(1);
 
     @Override
     public Player save(Player player) {
+
+        // Нормализация имени перед сохранением должна выполняться из сервисного слоя —
+            // там, где создаётся (должен создаваться) объект Player.
         String normalizedName = PlayerUtils.normalizeInput(player.name());
 
         boolean alreadyExists = players.values().stream()

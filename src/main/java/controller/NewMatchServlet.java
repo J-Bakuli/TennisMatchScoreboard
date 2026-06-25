@@ -14,10 +14,16 @@ import java.util.UUID;
 @WebServlet({"/new-match"})
 @Slf4j
 public class NewMatchServlet extends BaseServlet {
+
+    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
     private NewMatchService newMatchService;
 
     @Override
     public void init() throws ServletException {
+
+        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         newMatchService = getRequiredAttribute(
                 AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
     }

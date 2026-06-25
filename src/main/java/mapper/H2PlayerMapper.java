@@ -4,7 +4,13 @@ import model.Player;
 import persistence.entity.PlayerEntity;
 
 public final class H2PlayerMapper {
+
+    // Можно использовать аннотацию @UtilityClass из Lombok
+
     private H2PlayerMapper() {
+
+        // Конструктор приватный, поэтому недоступен для вызова за пределами класса.
+            // Нет необходимости бросать в нём исключение.
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
