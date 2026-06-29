@@ -5,6 +5,13 @@ import model.Player;
 import util.PlayerUtils;
 
 public class PlayerValidation {
+
+    // Все повторяющиеся или важные строковые и числовые литералы лучше выносить
+        // в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
+    // Проверка игрока поле создания объекта Player сводится к проверке его имени —
+        // в клиентском коде можно сразу вызывать метод validatePlayerName().
     public static void validatePlayerForCreate(Player player) {
         if (player == null) {
             throw new ValidationException("Player cannot be null");
@@ -13,6 +20,8 @@ public class PlayerValidation {
         validatePlayerName(player.name());
     }
 
+    // Если данные уже сохранены в БД, значит, они прошли валидацию при создании.
+        // Повторная валидация при чтении — избыточна.
     public static void validatePlayerForRead(Player player) {
         if (player == null) {
             throw new ValidationException("Player cannot be null");
@@ -55,9 +64,14 @@ public class PlayerValidation {
             throw new ValidationException("playerName length must be between 2 and 20 characters");
         }
 
+        // Текущее регулярное выражение позволяет имени закончиться дефисом или апострофом.
+            // Раз оно предусматривает запрет на эти символы в начале слова,
+            // то стоит предусмотреть и их отсутствие в конце.
+        // Реальные имена могут содержать точки.
+        // Можно разрешить использование кириллицы.
         if (!normalizedName.matches("^[a-z][a-z '-]{1,19}$")) {
             throw new ValidationException(
-                    "playerName must contain only ASCII symbols"
+                    "playerName must contain only ASCII symbols" // Неточное сообщение
             );
         }
     }

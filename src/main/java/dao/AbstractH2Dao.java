@@ -7,10 +7,13 @@ import util.HibernateUtil;
 
 @Slf4j
 public class AbstractH2Dao {
+
+    // В java принято называть методы глаголами: getSession()
     protected Session session() {
         return HibernateUtil.getSessionFactory().getCurrentSession();
     }
 
+    // Ошибочное название метода: ConstraintViolationException не всегда означает конфликт уникальности
     protected boolean isDuplicate(Exception e) {
         Throwable t = e;
         while (t != null) {

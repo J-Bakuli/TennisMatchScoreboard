@@ -41,6 +41,7 @@ public class AppLifecycleListener implements ServletContextListener {
             OngoingMatchService ongoingMatchService = new OngoingMatchService(
                     matchScoreCalculationService, finishedMatchesService, ongoingMatchDao, playerDao);
 
+            // Для помещения объектов в контекст можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
             sce.getServletContext().setAttribute(ONGOING_MATCH_DAO_ATTR, ongoingMatchDao);
             sce.getServletContext().setAttribute(PLAYER_DAO_ATTR, playerDao);
             sce.getServletContext().setAttribute(MATCHES_DAO_ATTR, matchesDao);

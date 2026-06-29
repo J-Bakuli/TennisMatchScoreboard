@@ -14,10 +14,16 @@ import java.io.IOException;
 @WebServlet({"/match-score"})
 @Slf4j
 public class MatchScoreServlet extends BaseServlet {
+
+    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
+        // Именованная константа делает код более семантически понятным.
+
     private OngoingMatchService ongoingMatchService;
 
     @Override
     public void init() throws ServletException {
+
+        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         ongoingMatchService = getRequiredAttribute(
                 AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
     }

@@ -40,6 +40,8 @@
                     <span class="error-message">${errorMessage}</span>
                 </div>
             </c:if>
+            <!-- По ТЗ форма должна отправлять POST-запрос по адресу `/match-score?uuid=$match_id`.
+                В текущей реализации `uuid` передается в теле запроса как скрытое поле, а не в URL. -->
             <c:if test="${empty errorMessage}">
             <form method="post"
                   action="${pageContext.request.contextPath}/match-score"

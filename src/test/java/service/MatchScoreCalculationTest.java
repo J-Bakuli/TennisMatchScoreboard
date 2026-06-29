@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MatchScoreCalculationTest {
+
+    // TODO: Доменные модели должны иметь собственные юнит-тесты, где проверяется вся их логика изолированно.
+
     private MatchScoreCalculationService service;
     private MatchState state;
 

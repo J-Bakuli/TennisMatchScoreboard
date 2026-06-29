@@ -17,7 +17,36 @@ import java.util.List;
 
 @Slf4j
 public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
+
+    // Константы объявляются первыми (пишутся в самом верху) в классе.
+
+    // Для визуального разделения HQL запросов на строки лучше использовать текстовые блоки
+
+    // Можно добавить суффикс '_HQL' или '_QUERY' к константам с текстом запросов.
+
+    // В HQL запросах используется JOIN FETCH, что эквивалентно 'INNER JOIN' в SQL.
+        //
+        // `INNER JOIN` вернёт только те записи о матчах, у которых все связанные сущности (`player1`, `player2`)
+        // гарантированно существуют в базе. Если по какой-либо причине (например, ошибка при импорте или
+        // ручное вмешательство) в таблице `matches` окажется запись со значением `NULL` в колонке `player1`,
+        // то такой матч будет молчаливо исключён из выборки.
+        //
+        // `LEFT JOIN` является более безопасным подходом:
+            //  - Он вернёт все матчи, даже если у них нарушена связь с игроком.
+            //  - Это позволит приложению либо упасть с `NullPointerException` (что явно укажет на проблему
+                //  с целостностью данных), либо корректно обработать такую ситуацию, если она допустима.
+                //  "Падать громко и рано" часто лучше, чем молча скрывать проблемы.
+        //
+        // Стоит заменить `JOIN FETCH` на `LEFT JOIN FETCH` для обоих игроков и победителя
+        // для большей устойчивости запроса к потенциально некорректным данным.
+        //
+        // (см. файл "join-fetch-left-join-fetch.md" в этом же пакете)
+
+    // Название параметра "pattern" тоже можно вынести в именованную константу
+
     private final FinishedMatchDtoMapper mapper = Mappers.getMapper(FinishedMatchDtoMapper.class);
+
+    // Можно назвать FILTER_BY_PLAYER_NAME_HQL
     private static final String WHERE_BY_PLAYER_PATTERN =
             "WHERE (:pattern IS NULL " +
                     "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
@@ -43,14 +72,21 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                 ongoingMatch.getPlayer1(), ongoingMatch.getPlayer2(), ongoingMatch.getMatchState());
 
         try {
+            // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя.
+                // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             MatchState matchState = ongoingMatch.getMatchState();
             PlayerEntity player1 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
             PlayerEntity player2 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
             PlayerEntity winner = session().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
             FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
             session().persist(finishedMatchEntity);
+
+        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
         } catch (Exception e) {
             if (isDuplicate(e)) {
+
+                // ConstraintViolationException не всегда означает конфликт уникальности.
+                    // К тому же у несохранённого матча в этом проекте нет уникального поля.
                 throw new AlreadyExistsException("Finished match already exists.", e);
             }
 
@@ -90,6 +126,8 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
+
+        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
         } catch (Exception e) {
             throw new DataAccessException("Failed to count finished matches", e);
         }
@@ -103,7 +141,12 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
+
+            // Преобразование "DTO <—> JPA Entity" — это задача сервисного слоя (через мапперы).
+                // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             return mapper.toDto(matchEntities);
+
+        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
         } catch (Exception e) {
             throw new DataAccessException("Failed to find finished matches", e);
         }

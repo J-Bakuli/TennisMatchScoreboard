@@ -4,6 +4,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 
 public class BaseServlet extends HttpServlet {
+
+    // Класс наследуется от HttpServlet, но при этом не является сервлетом (не занимается обработкой HTTP-запросов),
+        // а предоставляет вспомогательную утилиту для получения атрибутов.
+        // Можно убрать наследование от HttpServlet и передавать ServletContext в качестве параметра в метод.
+
+
+    // Название targetClass было бы более понятным для параметра Class<T> tClass
     protected <T> T getRequiredAttribute(String attributeName, Class<T> tClass) throws ServletException {
         Object value = getServletContext().getAttribute(attributeName);
         if (value == null) {
