@@ -19,8 +19,9 @@ public final class PlayerUtils {
     }
 
     public static String normalizeInput(String input) {
-
-        // Стоит проверить, что input != null, иначе при вызове .trim() может возникнуть NullPointerException
+        if (input == null) {
+            throw new IllegalArgumentException("Input must not be null");
+        }
         return input.trim().toLowerCase(Locale.ROOT);
     }
 }
