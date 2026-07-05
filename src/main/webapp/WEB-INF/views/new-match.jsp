@@ -37,7 +37,6 @@
                 <form method="post" action="${pageContext.request.contextPath}/new-match">
                    <c:if test="${not empty errorMessage}">
                         <div class="error-box">
-                            <span class="error-status">${errorStatus}</span>
                             <span class="error-message">${errorMessage}</span>
                         </div>
                     </c:if>

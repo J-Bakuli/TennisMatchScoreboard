@@ -68,7 +68,6 @@ public class ExceptionHandlingFilter extends HttpFilter {
             throw new ServletException(e);
         }
         res.setStatus(status);
-        req.setAttribute("errorStatus", status);
         req.getRequestDispatcher(jsp).forward(req, res);
     }
 }
