@@ -132,6 +132,20 @@ public class MatchScoreCalculationTest {
     }
 
     @Test
+    public void tieBreakPointsShouldBeShownInPointsDisplayTest() {
+        startTieBreakAtGamesSixSix(state);
+
+        Assertions.assertTrue(state.isTieBreak());
+
+        service.calculate(state, 1);
+        service.calculate(state, 1);
+        service.calculate(state, 1);
+
+        Assertions.assertEquals("3", state.getPlayer1PointsDisplay());
+        Assertions.assertNotEquals("40", state.getPlayer1PointsDisplay());
+    }
+
+    @Test
     public void shouldFinishMatchAtTwoSetsToZeroTest() {
         winSetSixToZero(state, 1);
         for (int i = 0; i < 5; i++) {

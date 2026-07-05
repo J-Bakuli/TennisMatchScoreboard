@@ -58,6 +58,9 @@ public class MatchState {
     // — это нарушает Принцип единой ответственности (SRP).
         // В идеале эта логика должна быть в маппере.
     public String getPlayer1PointsDisplay() {
+        if (tieBreak) {
+            return String.valueOf(getPlayer1TieBreakPoints());
+        }
         return regularGame.getPlayer1PointsInGame().display();
     }
 
@@ -65,6 +68,9 @@ public class MatchState {
     // — это нарушает Принцип единой ответственности (SRP).
         // В идеале эта логика должна быть в маппере.
     public String getPlayer2PointsDisplay() {
+        if (tieBreak) {
+            return String.valueOf(getPlayer2TieBreakPoints());
+        }
         return regularGame.getPlayer2PointsInGame().display();
     }
 
