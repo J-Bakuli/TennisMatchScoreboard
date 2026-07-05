@@ -32,70 +32,71 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
-            <c:if test="${not empty errorMessage}">
-                <div class="error-box">
-                    <span class="error-status">${errorStatus}</span>
-                    <span class="error-message">${errorMessage}</span>
-                </div>
-            </c:if>
-<div class="input-container">
-    <form method="get" action="${pageContext.request.contextPath}/matches" class="form-matches">
-        <input
-                class="input-filter"
-                name="filter_by_player_name"
-                placeholder="Filter by name"
-                type="text"
-                value="${matchesPage.filterByPlayerName}"
-        />
-        <div class="filter-actions">
-            <button type="submit" class="btn-filter">Apply Filter</button>
-            <a class="btn-filter" href="${pageContext.request.contextPath}/matches">Reset Filter</a>
-        </div>
-    </form>
-</div>
-
-        <c:if test="${empty errorMessage}">
-        <table class="table-matches">
-            <thead>
-            <tr>
-                <th>Game date</th>
-                <th>Player One</th>
-                <th>Player Two</th>
-                <th>Winner</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:choose>
-                <c:when test="${not empty matchesPage.matches}">
-                    <c:forEach var="match" items="${matchesPage.matches}">
-                        <tr>
-                            <td>${match.finishedAtFormatted}</td>
-                            <td>${match.player1Name}</td>
-                            <td>${match.player2Name}</td>
-                            <td><span class="winner-name-td">${match.winnerName}</span></td>
-                        </tr>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <tr>
-                        <td colspan="4">No matches yet</td>
-                    </tr>
-                </c:otherwise>
-            </c:choose>
-            </tbody>
-        </table>
-
-        <c:if test="${matchesPage.totalPages > 0}">
-            <div class="pagination">
-                <c:if test="${not empty matchesPage.previousPageUrl}">
-                    <a class="prev" href="${pageContext.request.contextPath}${matchesPage.previousPageUrl}">&lt;</a>
-                </c:if>
-                <span class="num-page current">${matchesPage.currentPage}</span>
-                <c:if test="${not empty matchesPage.nextPageUrl}">
-                    <a class="next" href="${pageContext.request.contextPath}${matchesPage.nextPageUrl}">&gt;</a>
-                </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="error-box">
+                <span class="error-status">${errorStatus}</span>
+                <span class="error-message">${errorMessage}</span>
             </div>
         </c:if>
+        <div class="input-container">
+            <form method="get" action="${pageContext.request.contextPath}/matches" class="form-matches">
+                <input
+                        class="input-filter"
+                        name="filter_by_player_name"
+                        placeholder="Filter by name"
+                        type="text"
+                        value="${matchesPage.filterByPlayerName}"
+                />
+                <div class="filter-actions">
+                    <button type="submit" class="btn-filter">Apply Filter</button>
+                    <c:if test="${not empty matchesPage.filterByPlayerName}">
+                        <a class="btn-filter" href="${pageContext.request.contextPath}/matches">Reset Filter</a>
+                    </c:if>
+                </div>
+            </form>
+        </div>
+        <c:if test="${empty errorMessage}">
+            <table class="table-matches">
+                <thead>
+                <tr>
+                    <th>Game date</th>
+                    <th>Player One</th>
+                    <th>Player Two</th>
+                    <th>Winner</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:choose>
+                    <c:when test="${not empty matchesPage.matches}">
+                        <c:forEach var="match" items="${matchesPage.matches}">
+                            <tr>
+                                <td>${match.finishedAtFormatted}</td>
+                                <td>${match.player1Name}</td>
+                                <td>${match.player2Name}</td>
+                                <td><span class="winner-name-td">${match.winnerName}</span></td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                            <td colspan="4">No matches yet</td>
+                        </tr>
+                    </c:otherwise>
+                </c:choose>
+                </tbody>
+            </table>
+
+            <c:if test="${matchesPage.totalPages > 0}">
+                <div class="pagination">
+                    <c:if test="${not empty matchesPage.previousPageUrl}">
+                        <a class="prev" href="${pageContext.request.contextPath}${matchesPage.previousPageUrl}">&lt;</a>
+                    </c:if>
+                    <span class="num-page current">${matchesPage.currentPage}</span>
+                    <c:if test="${not empty matchesPage.nextPageUrl}">
+                        <a class="next" href="${pageContext.request.contextPath}${matchesPage.nextPageUrl}">&gt;</a>
+                    </c:if>
+                </div>
+            </c:if>
         </c:if>
     </div>
 </main>
