@@ -71,7 +71,7 @@ public class PlayerValidation {
         // Можно разрешить использование кириллицы.
         if (!normalizedName.matches("^[a-z][a-z '-]{1,19}$")) {
             throw new ValidationException(
-                    "playerName must contain only ASCII symbols" // Неточное сообщение
+                    "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, and apostrophes"
             );
         }
     }
