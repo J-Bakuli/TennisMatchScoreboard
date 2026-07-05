@@ -1,16 +1,12 @@
 package util;
 
+import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public final class HibernateUtil {
-
-    // Можно использовать аннотацию @UtilityClass из Lombok
-
+@UtilityClass
+public class HibernateUtil {
     private static final SessionFactory SESSION_FACTORY = buildSessionFactory();
-
-    private HibernateUtil() {
-    }
 
     private static SessionFactory buildSessionFactory() {
         try {
