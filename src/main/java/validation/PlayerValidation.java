@@ -2,7 +2,7 @@ package validation;
 
 import exception.ValidationException;
 import model.Player;
-import util.PlayerUtils;
+import util.StringUtils;
 
 public class PlayerValidation {
 
@@ -35,7 +35,7 @@ public class PlayerValidation {
         validatePlayerName(name1);
         validatePlayerName(name2);
 
-        if (PlayerUtils.normalizeInput(name1).equals(PlayerUtils.normalizeInput(name2))) {
+        if (StringUtils.normalizeInput(name1).equals(StringUtils.normalizeInput(name2))) {
             throw new ValidationException("Player names should be unique and cannot be equal");
         }
     }
@@ -59,7 +59,7 @@ public class PlayerValidation {
             throw new ValidationException("playerName cannot be empty or blank");
         }
 
-        String normalizedName = PlayerUtils.normalizeInput(name);
+        String normalizedName = StringUtils.normalizeInput(name);
         if (normalizedName.length() < 2 || normalizedName.length() > 20) {
             throw new ValidationException("playerName length must be between 2 and 20 characters");
         }

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
 import persistence.entity.PlayerEntity;
-import util.PlayerUtils;
+import util.StringUtils;
 
 @Slf4j
 public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
@@ -29,7 +29,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
         // Нормализация имени перед сохранением должна выполняться из сервисного слоя —
             // там, где создаётся (должен создаваться) объект JPA Entity сущности.
-        String normalizedName = PlayerUtils.normalizeInput(player.name());
+        String normalizedName = StringUtils.normalizeInput(player.name());
 
         log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
 
@@ -61,7 +61,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
         // Нормализация имени перед сохранением должна выполняться из сервисного слоя —
             // там, где создаётся (должен создаваться) объект JPA Entity сущности.
-        String normalizedName = PlayerUtils.normalizeInput(name);
+        String normalizedName = StringUtils.normalizeInput(name);
 
         log.debug("Finding player by name: name={} ", normalizedName);
 

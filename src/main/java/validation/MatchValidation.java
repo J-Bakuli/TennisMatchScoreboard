@@ -3,7 +3,7 @@ package validation;
 import exception.ValidationException;
 import model.MatchState;
 import model.OngoingMatch;
-import util.PlayerUtils;
+import util.StringUtils;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -51,7 +51,7 @@ public class MatchValidation {
             throw new ValidationException("winner cannot be empty or blank");
         }
 
-        String normalizedWinner = PlayerUtils.normalizeInput(winner);
+        String normalizedWinner = StringUtils.normalizeInput(winner);
 
         if (!normalizedWinner.equals("player1") && !normalizedWinner.equals("player2")) {
             throw new ValidationException("winner must be either player1 or player2");

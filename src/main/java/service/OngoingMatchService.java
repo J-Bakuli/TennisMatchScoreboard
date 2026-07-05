@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
-import util.PlayerUtils;
+import util.StringUtils;
 import validation.MatchValidation;
 import validation.PlayerValidation;
 
@@ -126,7 +126,7 @@ public class OngoingMatchService {
         Integer player1Id = ongoingMatch.getPlayer1();
         Integer player2Id = ongoingMatch.getPlayer2();
 
-        String normalizedWinner = PlayerUtils.normalizeInput(winner);
+        String normalizedWinner = StringUtils.normalizeInput(winner);
 
         // "Магические" строки лучше выносить в `private static final` константы с понятными именами.
             // Именованная константа делает код более семантически понятным.

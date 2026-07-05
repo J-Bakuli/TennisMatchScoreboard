@@ -11,7 +11,7 @@ import model.OngoingMatch;
 import org.mapstruct.factory.Mappers;
 import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
-import util.PlayerUtils;
+import util.StringUtils;
 
 import java.util.List;
 
@@ -153,6 +153,6 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     private String bringToPattern(String playerName) {
-        return "%" + PlayerUtils.normalizeInput(playerName) + "%";
+        return "%" + StringUtils.normalizeInput(playerName) + "%";
     }
 }

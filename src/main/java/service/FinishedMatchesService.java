@@ -6,7 +6,7 @@ import dto.FinishedMatchesPageDto;
 import model.OngoingMatch;
 import service.support.PageContext;
 import service.support.UrlNavigation;
-import util.MatchesQueryUtils;
+import util.StringUtils;
 import validation.MatchValidation;
 import validation.MatchesQueryValidation;
 
@@ -49,7 +49,7 @@ public class FinishedMatchesService {
     }
 
     public FinishedMatchesPageDto getFinishedMatchesPage(String pageParam, String playerNameParam) {
-        String normalizedPlayerName = MatchesQueryUtils.normalizeFilter(playerNameParam);
+        String normalizedPlayerName = StringUtils.normalizeInput(playerNameParam);
         PageContext context = buildPageContext(pageParam, normalizedPlayerName);
         List<FinishedMatchDto> matchesDto = findMatchesForPage(context);
         UrlNavigation navigation = buildPaginationNavigation(context, playerNameParam);
