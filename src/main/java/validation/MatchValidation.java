@@ -34,13 +34,12 @@ public class MatchValidation {
     }
 
     public static UUID parseUuid(String uuid) {
-        UUID parsed;
+        validateMatchUuid(uuid);
         try {
-            parsed = UUID.fromString(uuid.trim());
+            return UUID.fromString(uuid.trim());
         } catch (IllegalArgumentException e) {
             throw new ValidationException("uuid has an invalid format");
         }
-        return parsed;
     }
 
     public static void validateWinner(String winner) {
