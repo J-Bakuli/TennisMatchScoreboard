@@ -1,4 +1,4 @@
-package controller;
+package servlet;
 
 import db.AppLifecycleListener;
 import dto.MatchScoreDto;
