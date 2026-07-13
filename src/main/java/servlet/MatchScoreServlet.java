@@ -16,10 +16,7 @@ import java.io.IOException;
 @WebServlet({"/match-score"})
 @Slf4j
 public class MatchScoreServlet extends HttpServlet {
-
-    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
-
+    private static final String MATCH_SCORE_JSP = "/WEB-INF/views/match-score.jsp";
     private OngoingMatchService ongoingMatchService;
 
     @Override
@@ -36,7 +33,7 @@ public class MatchScoreServlet extends HttpServlet {
         String uuid = req.getParameter("uuid");
         MatchScoreDto matchScore = ongoingMatchService.findMatchScore(uuid);
         req.setAttribute("matchScore", matchScore);
-        req.getRequestDispatcher("/WEB-INF/views/match-score.jsp").forward(req, resp);
+        req.getRequestDispatcher(MATCH_SCORE_JSP).forward(req, resp);
     }
 
     @Override
@@ -47,9 +44,9 @@ public class MatchScoreServlet extends HttpServlet {
         boolean isFinished = ongoingMatchService.processMatchScore(uuid, winner);
 
         if (isFinished) {
-            resp.sendRedirect(req.getContextPath() + "/matches");
+            resp.sendRedirect(req.getContextPath() + ServletPaths.MATCHES);
         } else {
-            resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + uuid);
+            resp.sendRedirect(req.getContextPath() + ServletPaths.MATCH_SCORE_WITH_UUID + uuid);
         }
     }
 }

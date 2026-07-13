@@ -16,10 +16,7 @@ import java.util.UUID;
 @WebServlet({"/new-match"})
 @Slf4j
 public class NewMatchServlet extends HttpServlet {
-
-    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
-
+    private static final String NEW_MATCH_JSP = "/WEB-INF/views/new-match.jsp";
     private NewMatchService newMatchService;
 
     @Override
@@ -33,7 +30,7 @@ public class NewMatchServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("GET /new-match");
-        req.getRequestDispatcher("/WEB-INF/views/new-match.jsp").forward(req, resp);
+        req.getRequestDispatcher(NEW_MATCH_JSP).forward(req, resp);
     }
 
     @Override
@@ -46,6 +43,6 @@ public class NewMatchServlet extends HttpServlet {
                 player2Name != null ? player2Name : "null");
 
         UUID matchId = newMatchService.startNewMatch(player1Name, player2Name);
-        resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + matchId);
+        resp.sendRedirect(req.getContextPath() + ServletPaths.MATCH_SCORE_WITH_UUID + matchId);
     }
 }

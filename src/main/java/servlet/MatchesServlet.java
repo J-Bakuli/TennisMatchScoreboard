@@ -16,9 +16,7 @@ import java.io.IOException;
 @WebServlet({"/matches"})
 @Slf4j
 public class MatchesServlet extends HttpServlet {
-
-    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
+    private static final String MATCHES_JSP = "/WEB-INF/views/matches.jsp";
     private FinishedMatchesService finishedMatchesService;
 
     @Override
@@ -37,6 +35,6 @@ public class MatchesServlet extends HttpServlet {
                 req.getParameter("filter_by_player_name")
         );
         req.setAttribute("matchesPage", matchesPage);
-        req.getRequestDispatcher("/WEB-INF/views/matches.jsp").forward(req, resp);
+        req.getRequestDispatcher(MATCHES_JSP).forward(req, resp);
     }
 }
