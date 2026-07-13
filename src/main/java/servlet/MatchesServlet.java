@@ -1,6 +1,5 @@
 package servlet;
 
-import db.AppLifecycleListener;
 import dto.FinishedMatchesPageDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,10 +20,8 @@ public class MatchesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         finishedMatchesService = ServletContextUtils.getRequiredAttribute(
-                getServletContext(), AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
+                getServletContext(), FinishedMatchesService.class);
     }
 
     @Override

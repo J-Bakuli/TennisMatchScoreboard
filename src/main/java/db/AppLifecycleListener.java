@@ -20,12 +20,6 @@ import util.HibernateUtil;
 @Slf4j
 @WebListener
 public class AppLifecycleListener implements ServletContextListener {
-    public static final String ONGOING_MATCH_DAO_ATTR = "ongoingMatchDao";
-    public static final String PLAYER_DAO_ATTR = "playerDao";
-    public static final String MATCHES_DAO_ATTR = "matchesDao";
-    public static final String NEW_MATCH_SERVICE_ATTR = "newMatchService";
-    public static final String ONGOING_MATCH_SERVICE_ATTR = "ongoingMatchService";
-    public static final String FINISHED_MATCHES_SERVICE_ATTR = "finishedMatchesService";
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -41,13 +35,12 @@ public class AppLifecycleListener implements ServletContextListener {
             OngoingMatchService ongoingMatchService = new OngoingMatchService(
                     matchScoreCalculationService, finishedMatchesService, ongoingMatchDao, playerDao);
 
-            // Для помещения объектов в контекст можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-            sce.getServletContext().setAttribute(ONGOING_MATCH_DAO_ATTR, ongoingMatchDao);
-            sce.getServletContext().setAttribute(PLAYER_DAO_ATTR, playerDao);
-            sce.getServletContext().setAttribute(MATCHES_DAO_ATTR, matchesDao);
-            sce.getServletContext().setAttribute(NEW_MATCH_SERVICE_ATTR, newMatchService);
-            sce.getServletContext().setAttribute(ONGOING_MATCH_SERVICE_ATTR, ongoingMatchService);
-            sce.getServletContext().setAttribute(FINISHED_MATCHES_SERVICE_ATTR, finishedMatchesService);
+            sce.getServletContext().setAttribute(OngoingMatchDao.class.getSimpleName(), ongoingMatchDao);
+            sce.getServletContext().setAttribute(PlayerDao.class.getSimpleName(), playerDao);
+            sce.getServletContext().setAttribute(MatchesDao.class.getSimpleName(), matchesDao);
+            sce.getServletContext().setAttribute(NewMatchService.class.getSimpleName(), newMatchService);
+            sce.getServletContext().setAttribute(OngoingMatchService.class.getSimpleName(), ongoingMatchService);
+            sce.getServletContext().setAttribute(FinishedMatchesService.class.getSimpleName(), finishedMatchesService);
             log.info("Hibernate SessionFactory, DAO and services initialized successfully");
         } catch (Exception e) {
             log.error("Failed to initialize application components", e);

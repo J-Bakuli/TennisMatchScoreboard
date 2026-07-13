@@ -1,6 +1,5 @@
 package servlet;
 
-import db.AppLifecycleListener;
 import dto.MatchScoreDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,10 +20,8 @@ public class MatchScoreServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         ongoingMatchService = ServletContextUtils.getRequiredAttribute(
-                getServletContext(), AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
+                getServletContext(), OngoingMatchService.class);
     }
 
     @Override

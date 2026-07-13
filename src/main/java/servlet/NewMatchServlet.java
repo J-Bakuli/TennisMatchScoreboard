@@ -1,6 +1,5 @@
 package servlet;
 
-import db.AppLifecycleListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,10 +20,8 @@ public class NewMatchServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-
-        // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
         newMatchService = ServletContextUtils.getRequiredAttribute(
-                getServletContext(), AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
+                getServletContext(), NewMatchService.class);
     }
 
     @Override
