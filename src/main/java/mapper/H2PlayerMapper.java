@@ -1,19 +1,11 @@
 package mapper;
 
+import lombok.experimental.UtilityClass;
 import model.Player;
 import persistence.entity.PlayerEntity;
 
-public final class H2PlayerMapper {
-
-    // Можно использовать аннотацию @UtilityClass из Lombok
-
-    private H2PlayerMapper() {
-
-        // Конструктор приватный, поэтому недоступен для вызова за пределами класса.
-            // Нет необходимости бросать в нём исключение.
-        throw new UnsupportedOperationException("Utility class cannot be instantiated");
-    }
-
+@UtilityClass
+public class H2PlayerMapper {
     public static Player toPlayer(PlayerEntity entity) {
         return new Player(entity.getId(), entity.getName());
     }
