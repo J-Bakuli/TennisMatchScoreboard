@@ -26,17 +26,6 @@ public class PlayerValidation {
         validatePlayerName(player.name());
     }
 
-    // Если данные уже сохранены в БД, значит, они прошли валидацию при создании.
-        // Повторная валидация при чтении — избыточна.
-    public void validatePlayerForRead(Player player) {
-        if (player == null) {
-            throw new ValidationException(PLAYER_CANNOT_BE_NULL_MESSAGE);
-        }
-
-        validatePlayerId(player.id());
-        validatePlayerName(player.name());
-    }
-
     public void validatePlayerNames(String name1, String name2) {
         validatePlayerName(name1);
         validatePlayerName(name2);

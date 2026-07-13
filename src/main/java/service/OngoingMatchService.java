@@ -113,9 +113,6 @@ public class OngoingMatchService {
     private String findPlayerNameById(Integer id) {
         PlayerValidation.validatePlayerId(id);
         Player player = playerDao.findById(id);
-
-        // Данные, пришедшие из БД, можно не валидировать.
-        PlayerValidation.validatePlayerForRead(player);
         return player.name();
     }
 
