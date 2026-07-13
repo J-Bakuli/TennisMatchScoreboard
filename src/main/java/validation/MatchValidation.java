@@ -11,15 +11,15 @@ import java.util.UUID;
 
 @UtilityClass
 public class MatchValidation {
-
     // Класс валидирует и парсит значение — это нарушает Принцип единой ответственности (SRP).
         // Валидатор должен заниматься только валидацией.
 
-    // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
-
     // Класс должен заниматься только приходящими от пользователя данными.
         // А доменная модель должна сама контролировать своё состояние и отвечать за его корректность.
+    private final String PLAYER_ONE = "player1";
+    private final String PLAYER_TWO = "player2";
+    private final String WINNER_MUST_BE_PLAYER_MESSAGE =
+            "winner must be either " + PLAYER_ONE + " or " + PLAYER_TWO;
 
     // Метод не проверяет корректность формата UUID
     public void validateMatchUuid(String uuid) {
@@ -52,8 +52,8 @@ public class MatchValidation {
 
         String normalizedWinner = StringUtils.normalizeInput(winner);
 
-        if (!normalizedWinner.equals("player1") && !normalizedWinner.equals("player2")) {
-            throw new ValidationException("winner must be either player1 or player2");
+        if (!normalizedWinner.equals(PLAYER_ONE) && !normalizedWinner.equals(PLAYER_TWO)) {
+            throw new ValidationException(WINNER_MUST_BE_PLAYER_MESSAGE);
         }
     }
 

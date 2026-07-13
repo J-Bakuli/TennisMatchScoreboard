@@ -7,16 +7,20 @@ import util.StringUtils;
 
 @UtilityClass
 public class PlayerValidation {
-
-    // Все повторяющиеся или важные строковые и числовые литералы лучше выносить
-        // в `private static final` константы с понятными именами.
-        // Именованная константа делает код более семантически понятным.
+    private final int MIN_PLAYER_NAME_LENGTH = 2;
+    private final int MAX_PLAYER_NAME_LENGTH = 20;
+    private final String PLAYER_NAME_PATTERN = "^[a-z][a-z '-]{1,19}$";
+    private final String PLAYER_CANNOT_BE_NULL_MESSAGE = "Player cannot be null";
+    private final String PLAYER_NAMES_MUST_BE_UNIQUE_MESSAGE =
+            "Player names should be unique and cannot be equal";
+    private final String PLAYER_NAME_INVALID_FORMAT_MESSAGE =
+            "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, and apostrophes";
 
     // Проверка игрока поле создания объекта Player сводится к проверке его имени —
         // в клиентском коде можно сразу вызывать метод validatePlayerName().
     public void validatePlayerForCreate(Player player) {
         if (player == null) {
-            throw new ValidationException("Player cannot be null");
+            throw new ValidationException(PLAYER_CANNOT_BE_NULL_MESSAGE);
         }
 
         validatePlayerName(player.name());
@@ -26,7 +30,7 @@ public class PlayerValidation {
         // Повторная валидация при чтении — избыточна.
     public void validatePlayerForRead(Player player) {
         if (player == null) {
-            throw new ValidationException("Player cannot be null");
+            throw new ValidationException(PLAYER_CANNOT_BE_NULL_MESSAGE);
         }
 
         validatePlayerId(player.id());
@@ -38,7 +42,7 @@ public class PlayerValidation {
         validatePlayerName(name2);
 
         if (StringUtils.normalizeInput(name1).equals(StringUtils.normalizeInput(name2))) {
-            throw new ValidationException("Player names should be unique and cannot be equal");
+            throw new ValidationException(PLAYER_NAMES_MUST_BE_UNIQUE_MESSAGE);
         }
     }
 
@@ -62,8 +66,10 @@ public class PlayerValidation {
         }
 
         String normalizedName = StringUtils.normalizeInput(name);
-        if (normalizedName.length() < 2 || normalizedName.length() > 20) {
-            throw new ValidationException("playerName length must be between 2 and 20 characters");
+        if (normalizedName.length() < MIN_PLAYER_NAME_LENGTH || normalizedName.length() > MAX_PLAYER_NAME_LENGTH) {
+            throw new ValidationException(
+                    "playerName length must be between " + MIN_PLAYER_NAME_LENGTH + " and " + MAX_PLAYER_NAME_LENGTH
+                            + " characters");
         }
 
         // Текущее регулярное выражение позволяет имени закончиться дефисом или апострофом.
@@ -71,10 +77,8 @@ public class PlayerValidation {
             // то стоит предусмотреть и их отсутствие в конце.
         // Реальные имена могут содержать точки.
         // Можно разрешить использование кириллицы.
-        if (!normalizedName.matches("^[a-z][a-z '-]{1,19}$")) {
-            throw new ValidationException(
-                    "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, and apostrophes"
-            );
+        if (!normalizedName.matches(PLAYER_NAME_PATTERN)) {
+            throw new ValidationException(PLAYER_NAME_INVALID_FORMAT_MESSAGE);
         }
     }
 }
