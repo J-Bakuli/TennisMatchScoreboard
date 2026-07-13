@@ -4,6 +4,7 @@ import db.AppLifecycleListener;
 import dto.FinishedMatchesPageDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,19 +14,18 @@ import java.io.IOException;
 
 @WebServlet({"/matches"})
 @Slf4j
-public class MatchesServlet extends BaseServlet {
+public class MatchesServlet extends HttpServlet {
 
     // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
         // Именованная константа делает код более семантически понятным.
-
     private FinishedMatchesService finishedMatchesService;
 
     @Override
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        finishedMatchesService = getRequiredAttribute(
-                AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
+        finishedMatchesService = BaseServlet.getRequiredAttribute(
+                getServletContext(), AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
     }
 
     @Override

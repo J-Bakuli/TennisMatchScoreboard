@@ -4,6 +4,7 @@ import db.AppLifecycleListener;
 import dto.MatchScoreDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import java.io.IOException;
 
 @WebServlet({"/match-score"})
 @Slf4j
-public class MatchScoreServlet extends BaseServlet {
+public class MatchScoreServlet extends HttpServlet {
 
     // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
         // Именованная константа делает код более семантически понятным.
@@ -24,8 +25,8 @@ public class MatchScoreServlet extends BaseServlet {
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        ongoingMatchService = getRequiredAttribute(
-                AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
+        ongoingMatchService = BaseServlet.getRequiredAttribute(
+                getServletContext(), AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
     }
 
     @Override

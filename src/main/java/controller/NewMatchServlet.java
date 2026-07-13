@@ -3,6 +3,7 @@ package controller;
 import db.AppLifecycleListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @WebServlet({"/new-match"})
 @Slf4j
-public class NewMatchServlet extends BaseServlet {
+public class NewMatchServlet extends HttpServlet {
 
     // Все повторяющиеся или важные строковые литералы лучше выносить в `private static final` константы с понятными именами.
         // Именованная константа делает код более семантически понятным.
@@ -24,8 +25,8 @@ public class NewMatchServlet extends BaseServlet {
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        newMatchService = getRequiredAttribute(
-                AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
+        newMatchService = BaseServlet.getRequiredAttribute(
+                getServletContext(), AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
     }
 
     @Override
