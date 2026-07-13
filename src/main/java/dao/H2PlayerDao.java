@@ -1,6 +1,6 @@
 package dao;
 
-import exception.AlreadyExistsException;
+import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
 import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             if (isDuplicate(e)) {
 
                 // ConstraintViolationException не всегда означает конфликт уникальности.
-                throw new AlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
+                throw new EntityAlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
             }
 
             throw new DataAccessException("Failed to save player with name=" + normalizedName, e);

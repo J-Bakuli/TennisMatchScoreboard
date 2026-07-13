@@ -10,7 +10,7 @@ public class ExceptionHandler {
         if (e instanceof NotFoundException) {
             log.warn("Mapped {} to NOT_FOUND (404): {}", e.getClass().getSimpleName(), e.getMessage());
             return ExceptionMessage.NOT_FOUND;
-        } else if (e instanceof AlreadyExistsException) {
+        } else if (e instanceof EntityAlreadyExistsException) {
             log.warn("Mapped {} to ALREADY_EXISTS (409): {}", e.getClass().getSimpleName(), e.getMessage());
             return ExceptionMessage.ALREADY_EXISTS;
         } else if (e instanceof ValidationException) {

@@ -2,7 +2,7 @@ package service;
 
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
-import exception.AlreadyExistsException;
+import exception.EntityAlreadyExistsException;
 import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
@@ -69,7 +69,7 @@ public class NewMatchService {
 
                 // Здесь стоит ловить DataAccessException (которое будет выбрасывать DAO)
                     // и анализировать, является ли его причиной нарушение уникальности.
-            } catch (AlreadyExistsException ae) {
+            } catch (EntityAlreadyExistsException ae) {
                 player = playerDao.findByName(playerName);
             }
             log.info("Created new Player with name={}", playerName);

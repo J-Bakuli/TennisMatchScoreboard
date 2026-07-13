@@ -1,6 +1,6 @@
 package dao;
 
-import exception.AlreadyExistsException;
+import exception.EntityAlreadyExistsException;
 import exception.NotFoundException;
 import model.Player;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +17,7 @@ public abstract class AbstractPlayerDaoTest {
 
         playerDao.save(new Player(null, "Nadal"));
         Assertions.assertThrows(
-                AlreadyExistsException.class,
+                EntityAlreadyExistsException.class,
                 () -> playerDao.save(new Player(null, "  Nadal  "))
         );
     }

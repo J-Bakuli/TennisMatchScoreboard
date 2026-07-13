@@ -1,7 +1,7 @@
 package dao;
 
 import dto.FinishedMatchDto;
-import exception.AlreadyExistsException;
+import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.FinishedMatchDtoMapper;
@@ -87,7 +87,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
                 // ConstraintViolationException не всегда означает конфликт уникальности.
                     // К тому же у несохранённого матча в этом проекте нет уникального поля.
-                throw new AlreadyExistsException("Finished match already exists.", e);
+                throw new EntityAlreadyExistsException("Finished match already exists.", e);
             }
 
             throw new DataAccessException("Failed to save finished match", e);
