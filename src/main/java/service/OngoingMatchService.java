@@ -9,6 +9,7 @@ import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
 import util.StringUtils;
+import util.UuidUtil;
 import validation.MatchValidation;
 import validation.PlayerValidation;
 
@@ -104,8 +105,8 @@ public class OngoingMatchService {
     // Метод должен принимать UUID матча, а не строку для парсинга.
     // Этот метод можно упразднить, оставив вместо него вызов ongoingMatchDao.findByUuid(uuid)
     private OngoingMatch findOngoingMatch(String uuidToConvert) {
-        MatchValidation.validateMatchUuid(uuidToConvert);
-        UUID uuid = MatchValidation.parseUuid(uuidToConvert);
+        MatchValidation.validateUuidFormat(uuidToConvert);
+        UUID uuid = UuidUtil.parseUuid(uuidToConvert);
         return ongoingMatchDao.findByUuid(uuid);
     }
 
@@ -139,8 +140,8 @@ public class OngoingMatchService {
     // Метод должен принимать UUID матча, а не строку для парсинга.
     // Этот метод можно упразднить, оставив вместо него вызов ongoingMatchDao.removeByUuid(uuid)
     private void finishOngoingMatch(String uuidToConvert) {
-        MatchValidation.validateMatchUuid(uuidToConvert);
-        UUID uuid = MatchValidation.parseUuid(uuidToConvert);
+        MatchValidation.validateUuidFormat(uuidToConvert);
+        UUID uuid = UuidUtil.parseUuid(uuidToConvert);
         ongoingMatchDao.removeByUuid(uuid);
     }
 }

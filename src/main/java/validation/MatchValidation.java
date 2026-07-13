@@ -11,9 +11,6 @@ import java.util.UUID;
 
 @UtilityClass
 public class MatchValidation {
-    // Класс валидирует и парсит значение — это нарушает Принцип единой ответственности (SRP).
-        // Валидатор должен заниматься только валидацией.
-
     // Класс должен заниматься только приходящими от пользователя данными.
         // А доменная модель должна сама контролировать своё состояние и отвечать за его корректность.
     private final String PLAYER_ONE = "player1";
@@ -21,7 +18,6 @@ public class MatchValidation {
     private final String WINNER_MUST_BE_PLAYER_MESSAGE =
             "winner must be either " + PLAYER_ONE + " or " + PLAYER_TWO;
 
-    // Метод не проверяет корректность формата UUID
     public void validateMatchUuid(String uuid) {
         if (uuid == null) {
             throw new ValidationException("uuid cannot be null");
@@ -32,10 +28,10 @@ public class MatchValidation {
         }
     }
 
-    public UUID parseUuid(String uuid) {
+    public void validateUuidFormat(String uuid) {
         validateMatchUuid(uuid);
         try {
-            return UUID.fromString(uuid.trim());
+            UUID.fromString(uuid.trim());
         } catch (IllegalArgumentException e) {
             throw new ValidationException("uuid has an invalid format");
         }
