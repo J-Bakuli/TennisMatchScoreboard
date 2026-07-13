@@ -75,7 +75,6 @@ public class MatchValidation {
         if (matchState == null) {
             throw new ValidationException("matchState cannot be null");
         }
-        validateNonNegativeScores(matchState);
     }
 
     private void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
@@ -89,25 +88,6 @@ public class MatchValidation {
 
         if (player2Id == null) {
             throw new ValidationException("player2Id cannot be null");
-        }
-    }
-
-    // Доменная модель должна сама контролировать своё состояние и запрещать его некорректные значения.
-    private void validateNonNegativeScores(MatchState matchState) {
-        if (matchState.getPlayer1GamesInSet() < 0) {
-            throw new ValidationException("player1GamesInSet cannot be negative");
-        }
-
-        if (matchState.getPlayer2GamesInSet() < 0) {
-            throw new ValidationException("player2GamesInSet cannot be negative");
-        }
-
-        if (matchState.getPlayer1TieBreakPoints() < 0) {
-            throw new ValidationException("player1TieBreakPoints cannot be negative");
-        }
-
-        if (matchState.getPlayer2TieBreakPoints() < 0) {
-            throw new ValidationException("player2TieBreakPoints cannot be negative");
         }
     }
 

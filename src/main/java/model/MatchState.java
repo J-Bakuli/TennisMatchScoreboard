@@ -106,6 +106,7 @@ public class MatchState {
         }
         processGameTransition(pointWinnerPlayerId);
         processSetTransition();
+        assertScoresNonNegative();
     }
 
     // Метод выполняет две задачи — проверяет, принадлежит ли ID одному из игроков и
@@ -120,7 +121,7 @@ public class MatchState {
 
         // Неправильный ID игрока в этом методе — это не ошибка валидации (ValidationException),
                 // а ошибка неправильного аргумента (IllegalArgumentException)
-        throw new ValidationException("Point winner is not part of this match.");
+        throw new IllegalArgumentException("Point winner is not part of this match.");
     }
 
     // Неиформативное название метода
@@ -178,7 +179,7 @@ public class MatchState {
                 // достаточно выполнить её один раз на входе ID в публичный метод.
             // Неправильный ID игрока в этом методе — это не ошибка валидации (ValidationException),
                 // а ошибка неправильного аргумента (IllegalArgumentException)
-            throw new ValidationException("Point winner is not part of this match.");
+            throw new IllegalStateException("Point winner is not part of this match.");
         }
     }
 
@@ -206,5 +207,20 @@ public class MatchState {
         regularGame.reset();
         tieBreak = false;
         tieBreakScore.reset();
+    }
+
+    private void assertScoresNonNegative() {
+        if (player1GamesInSet < 0) {
+            throw new IllegalStateException("player1GamesInSet cannot be negative");
+        }
+        if (player2GamesInSet < 0) {
+            throw new IllegalStateException("player2GamesInSet cannot be negative");
+        }
+        if (getPlayer1TieBreakPoints() < 0) {
+            throw new IllegalStateException("player1TieBreakPoints cannot be negative");
+        }
+        if (getPlayer2TieBreakPoints() < 0) {
+            throw new IllegalStateException("player2TieBreakPoints cannot be negative");
+        }
     }
 }
