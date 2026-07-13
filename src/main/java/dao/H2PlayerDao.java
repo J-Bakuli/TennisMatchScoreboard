@@ -6,7 +6,7 @@ import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
-import persistence.entity.PlayerEntity;
+import entity.PlayerEntity;
 import util.StringUtils;
 
 @Slf4j

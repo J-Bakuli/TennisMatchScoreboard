@@ -3,7 +3,7 @@ package mapper;
 import dto.FinishedMatchDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import persistence.entity.FinishedMatchEntity;
+import entity.FinishedMatchEntity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

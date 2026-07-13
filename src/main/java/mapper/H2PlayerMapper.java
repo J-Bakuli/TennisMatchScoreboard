@@ -2,7 +2,7 @@ package mapper;
 
 import lombok.experimental.UtilityClass;
 import model.Player;
-import persistence.entity.PlayerEntity;
+import entity.PlayerEntity;
 
 @UtilityClass
 public class H2PlayerMapper {

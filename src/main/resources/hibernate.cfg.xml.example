@@ -12,7 +12,7 @@
         <property name="hibernate.current_session_context_class">managed</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <mapping class ="persistence.entity.PlayerEntity"/>
-        <mapping class ="persistence.entity.FinishedMatchEntity"/>
+        <mapping class ="entity.PlayerEntity"/>
+        <mapping class ="entity.FinishedMatchEntity"/>
     </session-factory>
 </hibernate-configuration>

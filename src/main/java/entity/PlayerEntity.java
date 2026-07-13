@@ -1,4 +1,4 @@
-package persistence.entity;
+package entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +18,6 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "players", indexes = @Index(name = "idx_players_name", columnList = "name"))
 public class PlayerEntity {
-
-    // Пакет entity можно разместить на одном уровне с другими пакетами (dao, model, dto и тд): persistence.entity —> entity
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

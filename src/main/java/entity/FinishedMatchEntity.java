@@ -1,4 +1,4 @@
-package persistence.entity;
+package entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,8 +17,6 @@ import java.util.Objects;
 @Table(name = "matches") // "matches" является зарезервированным словом в некоторых СУБД.
     // Здесь проблем не будет, но лучше не выбирать такие названия. (см. файл "sql-keywords.md" в этом же пакете)
 public class FinishedMatchEntity {
-
-    // Пакет entity можно разместить на одном уровне с другими пакетами (dao, model, dto и тд): persistence.entity —> entity
 
     // Аннотация @Check помечена как @Deprecated(since = "7") вместо неё лучше использовать @CheckConstraint в @Table:
         // В таком духе: @Table(name = "matches", check = @CheckConstraint(name = "constraint_name", constraint = "constraint condition"))

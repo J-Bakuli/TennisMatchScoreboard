@@ -1,8 +1,8 @@
 package mapper;
 
 import lombok.experimental.UtilityClass;
-import persistence.entity.FinishedMatchEntity;
-import persistence.entity.PlayerEntity;
+import entity.FinishedMatchEntity;
+import entity.PlayerEntity;
 
 import java.time.LocalDateTime;
 

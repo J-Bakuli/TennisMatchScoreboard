@@ -9,8 +9,8 @@ import mapper.H2FinishedMatchMapper;
 import model.MatchState;
 import model.OngoingMatch;
 import org.mapstruct.factory.Mappers;
-import persistence.entity.FinishedMatchEntity;
-import persistence.entity.PlayerEntity;
+import entity.FinishedMatchEntity;
+import entity.PlayerEntity;
 import util.StringUtils;
 
 import java.util.List;
