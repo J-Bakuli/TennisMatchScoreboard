@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import service.OngoingMatchService;
+import util.ServletContextUtils;
 
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class MatchScoreServlet extends HttpServlet {
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        ongoingMatchService = BaseServlet.getRequiredAttribute(
+        ongoingMatchService = ServletContextUtils.getRequiredAttribute(
                 getServletContext(), AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
     }
 

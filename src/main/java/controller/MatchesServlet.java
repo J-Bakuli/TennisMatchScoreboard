@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import service.FinishedMatchesService;
+import util.ServletContextUtils;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class MatchesServlet extends HttpServlet {
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        finishedMatchesService = BaseServlet.getRequiredAttribute(
+        finishedMatchesService = ServletContextUtils.getRequiredAttribute(
                 getServletContext(), AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
     }
 

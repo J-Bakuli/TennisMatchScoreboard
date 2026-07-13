@@ -1,11 +1,11 @@
-package controller;
+package util;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class BaseServlet {
+public class ServletContextUtils {
     public static <T> T getRequiredAttribute(
             ServletContext servletContext, String attributeName, Class<T> targetClass) throws ServletException {
         Object value = servletContext.getAttribute(attributeName);

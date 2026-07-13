@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import service.NewMatchService;
+import util.ServletContextUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class NewMatchServlet extends HttpServlet {
     public void init() throws ServletException {
 
         // Для получения объектов из контекста можно использовать "естественные константы" — ClassName.class.getSimpleName() или ClassName.class.getName()
-        newMatchService = BaseServlet.getRequiredAttribute(
+        newMatchService = ServletContextUtils.getRequiredAttribute(
                 getServletContext(), AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
     }
 
