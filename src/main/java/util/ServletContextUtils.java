@@ -6,12 +6,12 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class ServletContextUtils {
-    public static <T> T getRequiredAttribute(ServletContext servletContext, Class<T> targetClass)
+    public <T> T getRequiredAttribute(ServletContext servletContext, Class<T> targetClass)
             throws ServletException {
         return getRequiredAttribute(servletContext, targetClass.getSimpleName(), targetClass);
     }
 
-    public static <T> T getRequiredAttribute(
+    public <T> T getRequiredAttribute(
             ServletContext servletContext, String attributeName, Class<T> targetClass) throws ServletException {
         Object value = servletContext.getAttribute(attributeName);
         if (value == null) {

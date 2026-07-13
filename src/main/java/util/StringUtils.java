@@ -6,7 +6,7 @@ import java.util.Locale;
 
 @UtilityClass
 public class StringUtils {
-    public static String normalizeInput(String input) {
+    public String normalizeInput(String input) {
         if (input == null || input.isBlank()) {
             throw new IllegalArgumentException("Input must not be null or blank");
         }

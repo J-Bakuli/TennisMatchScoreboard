@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @UtilityClass
 public class H2FinishedMatchMapper {
-    public static FinishedMatchEntity toEntity(PlayerEntity player1, PlayerEntity player2, PlayerEntity winner) {
+    public FinishedMatchEntity toEntity(PlayerEntity player1, PlayerEntity player2, PlayerEntity winner) {
         LocalDateTime localDateTime = LocalDateTime.now();
         return new FinishedMatchEntity(player1, player2, winner, localDateTime);
     }

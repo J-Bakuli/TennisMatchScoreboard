@@ -6,9 +6,9 @@ import org.hibernate.cfg.Configuration;
 
 @UtilityClass
 public class HibernateUtil {
-    private static final SessionFactory SESSION_FACTORY = buildSessionFactory();
+    private final SessionFactory SESSION_FACTORY = buildSessionFactory();
 
-    private static SessionFactory buildSessionFactory() {
+    private SessionFactory buildSessionFactory() {
         try {
             return new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
@@ -16,11 +16,11 @@ public class HibernateUtil {
         }
     }
 
-    public static SessionFactory getSessionFactory() {
+    public SessionFactory getSessionFactory() {
         return SESSION_FACTORY;
     }
 
-    public static void shutdown() {
+    public void shutdown() {
         if (!SESSION_FACTORY.isClosed()) {
             getSessionFactory().close();
         }

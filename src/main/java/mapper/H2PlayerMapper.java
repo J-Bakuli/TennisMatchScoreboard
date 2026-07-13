@@ -6,11 +6,11 @@ import entity.PlayerEntity;
 
 @UtilityClass
 public class H2PlayerMapper {
-    public static Player toPlayer(PlayerEntity entity) {
+    public Player toPlayer(PlayerEntity entity) {
         return new Player(entity.getId(), entity.getName());
     }
 
-    public static PlayerEntity toEntity(String normalizedName) {
+    public PlayerEntity toEntity(String normalizedName) {
         return new PlayerEntity(normalizedName);
     }
 }
