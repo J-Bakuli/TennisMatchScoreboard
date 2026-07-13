@@ -6,9 +6,10 @@ import dto.FinishedMatchesPageDto;
 import model.OngoingMatch;
 import service.support.PageContext;
 import service.support.UrlNavigation;
+import util.PageUtil;
 import util.StringUtils;
 import validation.MatchValidation;
-import validation.MatchesQueryValidation;
+import validation.PageValidation;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -64,7 +65,8 @@ public class FinishedMatchesService {
     }
 
     private PageContext buildPageContext(String pageParam, String playerNameFilter) {
-        int page = MatchesQueryValidation.parsePage(pageParam);
+        PageValidation.validatePage(pageParam);
+        int page = PageUtil.parsePage(pageParam);
         int totalMatches = calculateTotalMatches(playerNameFilter);
         int totalPages = totalMatches == 0 ? 0 : (int) Math.ceil((double) totalMatches / PAGE_SIZE);
         if (totalPages > 0 && page > totalPages) {
