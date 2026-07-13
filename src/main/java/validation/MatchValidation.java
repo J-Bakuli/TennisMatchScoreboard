@@ -1,6 +1,7 @@
 package validation;
 
 import exception.ValidationException;
+import lombok.experimental.UtilityClass;
 import model.MatchState;
 import model.OngoingMatch;
 import util.StringUtils;
@@ -8,10 +9,8 @@ import util.StringUtils;
 import java.util.Objects;
 import java.util.UUID;
 
+@UtilityClass
 public class MatchValidation {
-
-    // Если класс задуман как утилитный, то стоит сделать его final, а его конструктор private.
-        // Можно использовать аннотацию @UtilityClass из Lombok
 
     // Класс валидирует и парсит значение — это нарушает Принцип единой ответственности (SRP).
         // Валидатор должен заниматься только валидацией.
@@ -23,7 +22,7 @@ public class MatchValidation {
         // А доменная модель должна сама контролировать своё состояние и отвечать за его корректность.
 
     // Метод не проверяет корректность формата UUID
-    public static void validateMatchUuid(String uuid) {
+    public void validateMatchUuid(String uuid) {
         if (uuid == null) {
             throw new ValidationException("uuid cannot be null");
         }
@@ -33,7 +32,7 @@ public class MatchValidation {
         }
     }
 
-    public static UUID parseUuid(String uuid) {
+    public UUID parseUuid(String uuid) {
         validateMatchUuid(uuid);
         try {
             return UUID.fromString(uuid.trim());
@@ -42,7 +41,7 @@ public class MatchValidation {
         }
     }
 
-    public static void validateWinner(String winner) {
+    public void validateWinner(String winner) {
         if (winner == null) {
             throw new ValidationException("winner cannot be null");
         }
@@ -59,7 +58,7 @@ public class MatchValidation {
     }
 
     // Данные для создания OngoingMatch должны валидироваться только перед созданием объекта. Этот метод можно упразднить.
-    public static void validateOngoingMatch(OngoingMatch ongoingMatch) {
+    public void validateOngoingMatch(OngoingMatch ongoingMatch) {
         if (ongoingMatch == null) {
             throw new ValidationException("ongoingMatch cannot be null");
         }
@@ -76,14 +75,14 @@ public class MatchValidation {
         validateWinnerConsistency(winnerId, player1Id, player2Id, matchState);
     }
 
-    public static void validateMatchState(MatchState matchState) {
+    public void validateMatchState(MatchState matchState) {
         if (matchState == null) {
             throw new ValidationException("matchState cannot be null");
         }
         validateNonNegativeScores(matchState);
     }
 
-    private static void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
+    private void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
         if (uuid == null) {
             throw new ValidationException("ongoingMatch uuid cannot be null");
         }
@@ -98,7 +97,7 @@ public class MatchValidation {
     }
 
     // Доменная модель должна сама контролировать своё состояние и запрещать его некорректные значения.
-    private static void validateNonNegativeScores(MatchState matchState) {
+    private void validateNonNegativeScores(MatchState matchState) {
         if (matchState.getPlayer1GamesInSet() < 0) {
             throw new ValidationException("player1GamesInSet cannot be negative");
         }
@@ -116,7 +115,7 @@ public class MatchValidation {
         }
     }
 
-    private static void validatePlayersConsistency(Integer player1, Integer player2, MatchState matchState) {
+    private void validatePlayersConsistency(Integer player1, Integer player2, MatchState matchState) {
         if (player1 == null) {
             throw new ValidationException("player1 cannot be null");
         }
@@ -138,7 +137,7 @@ public class MatchValidation {
         }
     }
 
-    private static void validateWinnerConsistency(Integer winner, Integer player1, Integer player2, MatchState matchState) {
+    private void validateWinnerConsistency(Integer winner, Integer player1, Integer player2, MatchState matchState) {
         if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
             throw new ValidationException("winner must be one of ongoing match players");
         }

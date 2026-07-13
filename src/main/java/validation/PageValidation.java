@@ -1,9 +1,11 @@
 package validation;
 
 import exception.ValidationException;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class PageValidation {
-    public static void validatePage(String page) {
+    public void validatePage(String page) {
         if (page == null || page.isBlank()) {
             return;
         }

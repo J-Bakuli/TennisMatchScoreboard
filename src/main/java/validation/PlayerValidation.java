@@ -1,9 +1,11 @@
 package validation;
 
 import exception.ValidationException;
+import lombok.experimental.UtilityClass;
 import model.Player;
 import util.StringUtils;
 
+@UtilityClass
 public class PlayerValidation {
 
     // Все повторяющиеся или важные строковые и числовые литералы лучше выносить
@@ -12,7 +14,7 @@ public class PlayerValidation {
 
     // Проверка игрока поле создания объекта Player сводится к проверке его имени —
         // в клиентском коде можно сразу вызывать метод validatePlayerName().
-    public static void validatePlayerForCreate(Player player) {
+    public void validatePlayerForCreate(Player player) {
         if (player == null) {
             throw new ValidationException("Player cannot be null");
         }
@@ -22,7 +24,7 @@ public class PlayerValidation {
 
     // Если данные уже сохранены в БД, значит, они прошли валидацию при создании.
         // Повторная валидация при чтении — избыточна.
-    public static void validatePlayerForRead(Player player) {
+    public void validatePlayerForRead(Player player) {
         if (player == null) {
             throw new ValidationException("Player cannot be null");
         }
@@ -31,7 +33,7 @@ public class PlayerValidation {
         validatePlayerName(player.name());
     }
 
-    public static void validatePlayerNames(String name1, String name2) {
+    public void validatePlayerNames(String name1, String name2) {
         validatePlayerName(name1);
         validatePlayerName(name2);
 
@@ -40,7 +42,7 @@ public class PlayerValidation {
         }
     }
 
-    public static void validatePlayerId(Integer id) {
+    public void validatePlayerId(Integer id) {
         if (id == null) {
             throw new ValidationException("player id cannot be null");
         }
@@ -50,7 +52,7 @@ public class PlayerValidation {
         }
     }
 
-    public static void validatePlayerName(String name) {
+    public void validatePlayerName(String name) {
         if (name == null) {
             throw new ValidationException("playerName cannot be null");
         }
