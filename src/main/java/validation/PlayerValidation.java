@@ -9,12 +9,12 @@ import util.StringUtils;
 public class PlayerValidation {
     private final int MIN_PLAYER_NAME_LENGTH = 2;
     private final int MAX_PLAYER_NAME_LENGTH = 20;
-    private final String PLAYER_NAME_PATTERN = "^[a-z][a-z '-]{1,19}$";
+    private final String PLAYER_NAME_PATTERN = "^[a-z][a-z]*(?:[ '.\\-'][a-z][a-z]*)*$";
     private final String PLAYER_CANNOT_BE_NULL_MESSAGE = "Player cannot be null";
     private final String PLAYER_NAMES_MUST_BE_UNIQUE_MESSAGE =
             "Player names should be unique and cannot be equal";
     private final String PLAYER_NAME_INVALID_FORMAT_MESSAGE =
-            "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, and apostrophes";
+            "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, apostrophes, and periods";
 
     // Проверка игрока поле создания объекта Player сводится к проверке его имени —
         // в клиентском коде можно сразу вызывать метод validatePlayerName().
@@ -61,11 +61,6 @@ public class PlayerValidation {
                             + " characters");
         }
 
-        // Текущее регулярное выражение позволяет имени закончиться дефисом или апострофом.
-            // Раз оно предусматривает запрет на эти символы в начале слова,
-            // то стоит предусмотреть и их отсутствие в конце.
-        // Реальные имена могут содержать точки.
-        // Можно разрешить использование кириллицы.
         if (!normalizedName.matches(PLAYER_NAME_PATTERN)) {
             throw new ValidationException(PLAYER_NAME_INVALID_FORMAT_MESSAGE);
         }
