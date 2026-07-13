@@ -3,7 +3,6 @@ package service;
 import exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
-import validation.MatchValidation;
 
 @Slf4j
 public class MatchScoreCalculationService {
@@ -20,9 +19,7 @@ public class MatchScoreCalculationService {
 
     public MatchState calculate(MatchState state, Integer pointWinnerPlayerId) {
         validatePointInput(state, pointWinnerPlayerId);
-        MatchValidation.validateMatchState(state);
         state.awardPointTo(pointWinnerPlayerId);
-        MatchValidation.validateMatchState(state);
         return state;
     }
 

@@ -2,11 +2,8 @@ package validation;
 
 import exception.ValidationException;
 import lombok.experimental.UtilityClass;
-import model.MatchState;
-import model.OngoingMatch;
 import util.StringUtils;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @UtilityClass
@@ -50,72 +47,6 @@ public class MatchValidation {
 
         if (!normalizedWinner.equals(PLAYER_ONE) && !normalizedWinner.equals(PLAYER_TWO)) {
             throw new ValidationException(WINNER_MUST_BE_PLAYER_MESSAGE);
-        }
-    }
-
-    // Данные для создания OngoingMatch должны валидироваться только перед созданием объекта. Этот метод можно упразднить.
-    public void validateOngoingMatch(OngoingMatch ongoingMatch) {
-        if (ongoingMatch == null) {
-            throw new ValidationException("ongoingMatch cannot be null");
-        }
-
-        UUID uuid = ongoingMatch.getUuid();
-        Integer player1Id = ongoingMatch.getPlayer1();
-        Integer player2Id = ongoingMatch.getPlayer2();
-        MatchState matchState = ongoingMatch.getMatchState();
-        Integer winnerId = matchState.getWinnerPlayerId();
-
-        validateNotNullId(uuid, player1Id, player2Id);
-        validateMatchState(matchState);
-        validatePlayersConsistency(player1Id, player2Id, matchState);
-        validateWinnerConsistency(winnerId, player1Id, player2Id, matchState);
-    }
-
-    public void validateMatchState(MatchState matchState) {
-        if (matchState == null) {
-            throw new ValidationException("matchState cannot be null");
-        }
-    }
-
-    private void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
-        if (uuid == null) {
-            throw new ValidationException("ongoingMatch uuid cannot be null");
-        }
-
-        if (player1Id == null) {
-            throw new ValidationException("player1Id cannot be null");
-        }
-
-        if (player2Id == null) {
-            throw new ValidationException("player2Id cannot be null");
-        }
-    }
-
-    private void validatePlayersConsistency(Integer player1, Integer player2, MatchState matchState) {
-        if (player1 == null) {
-            throw new ValidationException("player1 cannot be null");
-        }
-
-        if (player2 == null) {
-            throw new ValidationException("player2 cannot be null");
-        }
-
-        if (player1.equals(player2)) {
-            throw new ValidationException("players 1 and 2 must be different");
-        }
-
-        if (!Objects.equals(player1, matchState.getPlayer1Id())) {
-            throw new ValidationException("player1 from ongoingMatch must be the same as the one from matchState");
-        }
-
-        if (!Objects.equals(player2, matchState.getPlayer2Id())) {
-            throw new ValidationException("player2 from ongoingMatch must be the same as the one from matchState");
-        }
-    }
-
-    private void validateWinnerConsistency(Integer winner, Integer player1, Integer player2, MatchState matchState) {
-        if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
-            throw new ValidationException("winner must be one of ongoing match players");
         }
     }
 }

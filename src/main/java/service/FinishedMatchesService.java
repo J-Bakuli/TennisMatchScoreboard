@@ -8,7 +8,6 @@ import service.support.PageContext;
 import service.support.UrlNavigation;
 import util.PageUtil;
 import util.StringUtils;
-import validation.MatchValidation;
 import validation.PageValidation;
 
 import java.net.URLEncoder;
@@ -45,7 +44,10 @@ public class FinishedMatchesService {
     }
 
     public void saveFinishedMatch(OngoingMatch ongoingMatch) {
-        MatchValidation.validateOngoingMatch(ongoingMatch);
+        if (ongoingMatch == null) {
+            throw new IllegalArgumentException("ongoingMatch cannot be null");
+        }
+        ongoingMatch.assertFinished();
         matchesDao.save(ongoingMatch);
     }
 

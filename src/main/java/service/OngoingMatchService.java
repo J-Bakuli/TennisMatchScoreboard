@@ -122,7 +122,6 @@ public class OngoingMatchService {
     // Логика этого метода должна выполняться из сервлета
     private Integer findWinnerPlayerId(String winner, OngoingMatch ongoingMatch) {
         MatchValidation.validateWinner(winner);
-        MatchValidation.validateOngoingMatch(ongoingMatch);
 
         Integer player1Id = ongoingMatch.getPlayer1();
         Integer player2Id = ongoingMatch.getPlayer2();
