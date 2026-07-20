@@ -12,18 +12,14 @@ import util.StringUtils;
 
 @Slf4j
 public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
-
-    // Текст HQL запроса удобнее читать, когда он логично разбит на строки, даже если он короткий.
-        // Для визуального разделения запросов на строки лучше использовать текстовые блоки
-
     // DAO должен работать с JPA Entity игрока, а не его доменной моделью
         // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
-
-    // Можно добавить суффикс '_HQL' или '_QUERY' к константам с текстом запросов.
-
-    // Здесь запросы называются SELECT*, а в H2MatchesDao — FIND*. Для единообразия можно выбрать один вариант.
-    private static final String SELECT_BY_NAME = "from PlayerEntity p where p.name = :name";
-    private static final String SELECT_BY_ID = "from PlayerEntity p where p.id = :id";
+    private static final String SELECT_BY_NAME_QUERY =
+            "from PlayerEntity p " +
+            "where p.name = :name";
+    private static final String SELECT_BY_ID_QUERY = "" +
+            "from PlayerEntity p " +
+            "where p.id = :id";
 
     @Override
     public Player save(Player player) {
@@ -63,7 +59,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         log.debug("Finding player by name: name={} ", normalizedName);
 
         try {
-            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_NAME, PlayerEntity.class)
+            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_NAME_QUERY, PlayerEntity.class)
                     .setParameter("name", normalizedName)
                     .uniqueResult();
 
@@ -89,7 +85,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         log.debug("Finding player by id: id={} ", id);
 
         try {
-            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_ID, PlayerEntity.class)
+            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_ID_QUERY, PlayerEntity.class)
                     .setParameter("id", id)
                     .uniqueResult();
 

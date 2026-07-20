@@ -9,7 +9,6 @@ import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
 import model.MatchState;
 import model.OngoingMatch;
-import org.hibernate.HibernateException;
 import org.mapstruct.factory.Mappers;
 import entity.FinishedMatchEntity;
 import entity.PlayerEntity;
@@ -21,10 +20,6 @@ import java.util.List;
 public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     // Константы объявляются первыми (пишутся в самом верху) в классе.
-
-    // Для визуального разделения HQL запросов на строки лучше использовать текстовые блоки
-
-    // Можно добавить суффикс '_HQL' или '_QUERY' к константам с текстом запросов.
 
     // В HQL запросах используется JOIN FETCH, что эквивалентно 'INNER JOIN' в SQL.
         //
@@ -48,24 +43,23 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     private final FinishedMatchDtoMapper mapper = Mappers.getMapper(FinishedMatchDtoMapper.class);
 
-    // Можно назвать FILTER_BY_PLAYER_NAME_HQL
-    private static final String WHERE_BY_PLAYER_PATTERN =
+    private static final String FILTER_BY_PLAYER_PATTERN_QUERY =
             "WHERE (:pattern IS NULL " +
                     "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
                     "OR LOWER(p2.name) LIKE LOWER(:pattern)) ";
 
-    private static final String COUNT_ALL_MATCHES_BY_PLAYER_NAME =
+    private static final String COUNT_ALL_MATCHES_BY_PLAYER_NAME_QUERY =
             "SELECT COUNT (m) FROM FinishedMatchEntity m " +
                     "JOIN m.player1 p1 " +
                     "JOIN m.player2 p2 " +
-                    WHERE_BY_PLAYER_PATTERN;
+                    FILTER_BY_PLAYER_PATTERN_QUERY;
 
-    private static final String FIND_ALL_MATCHES_BY_PLAYER_NAME =
+    private static final String SELECT_ALL_MATCHES_BY_PLAYER_NAME_QUERY =
             "SELECT m FROM FinishedMatchEntity m " +
                     "JOIN FETCH m.player1 p1 " +
                     "JOIN FETCH m.player2 p2 " +
                     "JOIN FETCH m.winner " +
-                    WHERE_BY_PLAYER_PATTERN +
+                    FILTER_BY_PLAYER_PATTERN_QUERY +
                     "ORDER BY m.finishedAt DESC";
 
     @Override
@@ -120,7 +114,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     private Integer countByPattern(String pattern) {
         try {
-            return getSession().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
+            return getSession().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME_QUERY, Long.class)
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
@@ -132,7 +126,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     private List<FinishedMatchDto> findByPattern(String pattern, int offset, int limit) {
         try {
             List<FinishedMatchEntity> matchEntities = getSession()
-                    .createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatchEntity.class)
+                    .createQuery(SELECT_ALL_MATCHES_BY_PLAYER_NAME_QUERY, FinishedMatchEntity.class)
                     .setParameter("pattern", pattern)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
