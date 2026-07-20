@@ -7,9 +7,7 @@ import util.HibernateUtil;
 
 @Slf4j
 public class AbstractH2Dao {
-
-    // В java принято называть методы глаголами: getSession()
-    protected Session session() {
+    protected Session getSession() {
         return HibernateUtil.getSessionFactory().getCurrentSession();
     }
 

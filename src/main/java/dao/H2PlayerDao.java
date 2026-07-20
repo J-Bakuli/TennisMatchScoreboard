@@ -38,7 +38,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             PlayerEntity playerEntity = H2PlayerMapper.toEntity(normalizedName);
-            session().persist(playerEntity);
+            getSession().persist(playerEntity);
 
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
@@ -66,7 +66,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         log.debug("Finding player by name: name={} ", normalizedName);
 
         try {
-            PlayerEntity playerEntity = session().createQuery(SELECT_BY_NAME, PlayerEntity.class)
+            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_NAME, PlayerEntity.class)
                     .setParameter("name", normalizedName)
                     .uniqueResult();
 
@@ -94,7 +94,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         log.debug("Finding player by id: id={} ", id);
 
         try {
-            PlayerEntity playerEntity = session().createQuery(SELECT_BY_ID, PlayerEntity.class)
+            PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_ID, PlayerEntity.class)
                     .setParameter("id", id)
                     .uniqueResult();
 

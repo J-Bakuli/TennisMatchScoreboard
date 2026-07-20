@@ -75,11 +75,11 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя.
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             MatchState matchState = ongoingMatch.getMatchState();
-            PlayerEntity player1 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
-            PlayerEntity player2 = session().getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
-            PlayerEntity winner = session().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
+            PlayerEntity player1 = getSession().getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
+            PlayerEntity player2 = getSession().getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
+            PlayerEntity winner = getSession().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
             FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
-            session().persist(finishedMatchEntity);
+            getSession().persist(finishedMatchEntity);
 
         // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
         } catch (Exception e) {
@@ -122,7 +122,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     private Integer countByPattern(String pattern) {
         try {
-            return session().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
+            return getSession().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME, Long.class)
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
@@ -135,7 +135,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
 
     private List<FinishedMatchDto> findByPattern(String pattern, int offset, int limit) {
         try {
-            List<FinishedMatchEntity> matchEntities = session()
+            List<FinishedMatchEntity> matchEntities = getSession()
                     .createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatchEntity.class)
                     .setParameter("pattern", pattern)
                     .setFirstResult(offset)
