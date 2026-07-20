@@ -3,6 +3,7 @@ package dao;
 import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
 import exception.NotFoundException;
+import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
@@ -43,15 +44,11 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             return H2PlayerMapper.toPlayer(playerEntity);
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (isDuplicate(e)) {
-
                 // ConstraintViolationException не всегда означает конфликт уникальности.
                 throw new EntityAlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
             }
-
             throw new DataAccessException("Failed to save player with name=" + normalizedName, e);
         }
     }
@@ -82,9 +79,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             return H2PlayerMapper.toPlayer(playerEntity);
         } catch (NotFoundException e) {
             throw e;
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by name=" + normalizedName, e);
         }
     }
@@ -110,9 +105,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             return H2PlayerMapper.toPlayer(playerEntity);
         } catch (NotFoundException e) {
             throw e;
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by id=" + id, e);
         }
     }

@@ -3,11 +3,13 @@ package dao;
 import dto.FinishedMatchDto;
 import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
+import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
 import model.MatchState;
 import model.OngoingMatch;
+import org.hibernate.HibernateException;
 import org.mapstruct.factory.Mappers;
 import entity.FinishedMatchEntity;
 import entity.PlayerEntity;
@@ -80,16 +82,12 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
             PlayerEntity winner = getSession().getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
             FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
             getSession().persist(finishedMatchEntity);
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             if (isDuplicate(e)) {
-
                 // ConstraintViolationException не всегда означает конфликт уникальности.
                     // К тому же у несохранённого матча в этом проекте нет уникального поля.
                 throw new EntityAlreadyExistsException("Finished match already exists.", e);
             }
-
             throw new DataAccessException("Failed to save finished match", e);
         }
     }
@@ -126,9 +124,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .setParameter("pattern", pattern)
                     .getSingleResult()
                     .intValue();
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             throw new DataAccessException("Failed to count finished matches", e);
         }
     }
@@ -145,9 +141,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
             // Преобразование "DTO <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             return mapper.toDto(matchEntities);
-
-        // TODO: Ловится слишком общее исключение. (см. файл "dao.md" в этом же пакете)
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find finished matches", e);
         }
     }
