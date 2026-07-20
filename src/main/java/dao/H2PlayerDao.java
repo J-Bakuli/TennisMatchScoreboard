@@ -62,19 +62,9 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_NAME_QUERY, PlayerEntity.class)
                     .setParameter("name", normalizedName)
                     .uniqueResult();
-
-            if (playerEntity == null) {
-
-                // Отсутствие записи в БД является нормальной и допустимой ситуацией —
-                    // в этом случае не нужно выбрасывать исключение
-                throw new NotFoundException("Player not found by name=" + normalizedName);
-            }
-
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             return H2PlayerMapper.toPlayer(playerEntity);
-        } catch (NotFoundException e) {
-            throw e;
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by name=" + normalizedName, e);
         }
@@ -88,19 +78,9 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             PlayerEntity playerEntity = getSession().createQuery(SELECT_BY_ID_QUERY, PlayerEntity.class)
                     .setParameter("id", id)
                     .uniqueResult();
-
-            if (playerEntity == null) {
-
-                // Отсутствие записи в БД является нормальной и допустимой ситуацией —
-                    // в этом случае не нужно выбрасывать исключение
-                throw new NotFoundException("Player not found by id=" + id);
-            }
-
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
             return H2PlayerMapper.toPlayer(playerEntity);
-        } catch (NotFoundException e) {
-            throw e;
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by id=" + id, e);
         }
