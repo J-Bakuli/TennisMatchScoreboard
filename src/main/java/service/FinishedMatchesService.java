@@ -109,6 +109,6 @@ public class FinishedMatchesService {
     }
 
     private int calculateTotalMatches(String playerNameFilter) {
-        return playerNameFilter == null ? matchesDao.countAllMatches() : matchesDao.countMatchesByPlayerName(playerNameFilter);
+        return playerNameFilter == null ? matchesDao.countAll() : matchesDao.countByPlayerName(playerNameFilter);
     }
 }

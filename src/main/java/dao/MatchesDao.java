@@ -24,11 +24,9 @@ public interface MatchesDao {
 
     // Использование `long` для счётчиков, получаемых из БД, является более правильной практикой,
         // так как SQL-функция `COUNT` возвращает 64-битное число.
-    // Можно назвать просто countAll
-    Integer countAllMatches();
+    Integer countAll();
 
     // Использование `long` для счётчиков, получаемых из БД, является более правильной практикой,
         // так как SQL-функция `COUNT` возвращает 64-битное число.
-    // Можно назвать countByPlayerName
-    Integer countMatchesByPlayerName(String playerName);
+    Integer countByPlayerName(String playerName);
 }

@@ -87,7 +87,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public Integer countAllMatches() {
+    public Integer countAll() {
         log.debug("Counting all finished matches");
         return countByPattern(null);
     }
@@ -106,7 +106,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public Integer countMatchesByPlayerName(String playerName) {
+    public Integer countByPlayerName(String playerName) {
         log.debug("Counting all finished matches by {}", playerName);
         String pattern = bringToPattern(playerName);
         return countByPattern(pattern);
