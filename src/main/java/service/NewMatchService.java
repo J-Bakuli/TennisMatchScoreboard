@@ -4,6 +4,7 @@ import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import exception.EntityAlreadyExistsException;
 import exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
 import model.OngoingMatch;
@@ -13,6 +14,7 @@ import validation.PlayerValidation;
 import java.util.UUID;
 
 @Slf4j
+@RequiredArgsConstructor
 public class NewMatchService {
 
     // TODO: Нет интерфейса для этого класса. (см. файл "service.md" в этом же пакете)
@@ -29,12 +31,6 @@ public class NewMatchService {
 
     private final PlayerDao playerDao;
     private final OngoingMatchDao ongoingMatchDao;
-
-    // Можно использовать @RequiredArgsConstructor
-    public NewMatchService(PlayerDao playerDao, OngoingMatchDao ongoingMatchDao) {
-        this.playerDao = playerDao;
-        this.ongoingMatchDao = ongoingMatchDao;
-    }
 
     public UUID startNewMatch(String player1Name, String player2Name) {
 

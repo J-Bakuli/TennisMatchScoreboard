@@ -3,6 +3,7 @@ package service;
 import dao.MatchesDao;
 import dto.FinishedMatchDto;
 import dto.FinishedMatchesPageDto;
+import lombok.RequiredArgsConstructor;
 import model.OngoingMatch;
 import service.support.PageContext;
 import service.support.UrlNavigation;
@@ -14,6 +15,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class FinishedMatchesService {
 
     // TODO: Нет интерфейса для этого класса. (см. файл "service.md" в этом же пакете)
@@ -37,11 +39,6 @@ public class FinishedMatchesService {
     private static final String MATCHES_PATH = "/matches";
     private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
-
-    // Можно использовать @RequiredArgsConstructor
-    public FinishedMatchesService(MatchesDao matchesDao) {
-        this.matchesDao = matchesDao;
-    }
 
     public void saveFinishedMatch(OngoingMatch ongoingMatch) {
         if (ongoingMatch == null) {
