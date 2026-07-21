@@ -16,14 +16,10 @@ public class PlayerValidation {
     private final String PLAYER_NAME_INVALID_FORMAT_MESSAGE =
             "playerName must start with a letter and contain only lowercase letters, spaces, hyphens, apostrophes, and periods";
 
-    // Проверка игрока поле создания объекта Player сводится к проверке его имени —
-        // в клиентском коде можно сразу вызывать метод validatePlayerName().
     public void validatePlayerForCreate(Player player) {
         if (player == null) {
             throw new ValidationException(PLAYER_CANNOT_BE_NULL_MESSAGE);
         }
-
-        validatePlayerName(player.name());
     }
 
     public void validatePlayerNames(String name1, String name2) {

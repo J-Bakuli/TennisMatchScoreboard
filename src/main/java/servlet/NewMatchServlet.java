@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import service.NewMatchService;
 import util.ServletContextUtils;
+import validation.PlayerValidation;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -38,6 +39,8 @@ public class NewMatchServlet extends HttpServlet {
         log.info("POST /new-match - received: player1Name='{}', player2Name='{}'",
                 player1Name != null ? player1Name : "null",
                 player2Name != null ? player2Name : "null");
+
+        PlayerValidation.validatePlayerNames(player1Name, player2Name);
 
         UUID matchId = newMatchService.startNewMatch(player1Name, player2Name);
         resp.sendRedirect(req.getContextPath() + ServletPaths.MATCH_SCORE_WITH_UUID + matchId);

@@ -33,9 +33,6 @@ public class NewMatchService {
     private final OngoingMatchDao ongoingMatchDao;
 
     public UUID startNewMatch(String player1Name, String player2Name) {
-
-        // Валидация должна быть как можно ближе ко входу данных в приложение
-        PlayerValidation.validatePlayerNames(player1Name, player2Name);
         Player player1 = findOrCreatePlayer(player1Name);
         Player player2 = findOrCreatePlayer(player2Name);
 
@@ -50,9 +47,6 @@ public class NewMatchService {
     private Player findOrCreatePlayer(String playerName) {
         Player player;
         try {
-
-            // Валидация обоих имён уже выполняется до запуска этого метода. Достаточно выполнить её один раз.
-            PlayerValidation.validatePlayerName(playerName);
             player = playerDao.findByName(playerName);
             log.info("Player with name={} already exists", playerName);
         } catch (NotFoundException e) {
