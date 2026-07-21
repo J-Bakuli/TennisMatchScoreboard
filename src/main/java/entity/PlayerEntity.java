@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,9 +24,6 @@ public class PlayerEntity {
     private String name;
 
     public PlayerEntity(String name) {
-
-        // В проекте уже есть валидация, которая проверяет имя на null, длину, формат и т.д.
-            // Проверка в конструкторе дублирует только часть этой логики. Достаточно оставить её только в одном месте.
-        this.name = Objects.requireNonNull(name);
+        this.name = name;
     }
 }
