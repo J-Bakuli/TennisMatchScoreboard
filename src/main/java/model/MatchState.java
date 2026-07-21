@@ -189,12 +189,7 @@ public class MatchState {
         } else if (player2GamesInSet > player1GamesInSet) {
             player2Sets++;
         } else {
-
-            // Попытка засчитать победу в сете при равном счёте в этом методе —
-                // это не ошибка валидации (ValidationException),
-                // а сигнал о том, что метод был запущен в неподходящее время —
-                // объект в неправильном для вызова этого метода состоянии (IllegalStateException)
-            throw new ValidationException("Cannot award set when games are equal.");
+            throw new IllegalStateException("Cannot award set when games are equal.");
         }
     }
 
