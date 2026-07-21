@@ -97,14 +97,14 @@ public class MatchState {
         return null;
     }
 
-    public void awardPointTo(Integer pointWinnerPlayerId) { // Можно назвать аргумент просто winnerId (пока это ID)
-        boolean isPlayer1PointWinner = isPlayer1Winner(pointWinnerPlayerId);
+    public void awardPointTo(Integer winnerId) {
+        boolean isPlayer1PointWinner = isPlayer1Winner(winnerId);
         if (tieBreak) {
             tieBreakScore.awardPointTo(isPlayer1PointWinner);
         } else {
             regularGame.awardPointTo(isPlayer1PointWinner);
         }
-        processGameTransition(pointWinnerPlayerId);
+        processGameTransition(winnerId);
         processSetTransition();
         assertScoresNonNegative();
     }
@@ -118,9 +118,6 @@ public class MatchState {
         if (pointWinnerPlayerId.equals(player2Id)) {
             return false;
         }
-
-        // Неправильный ID игрока в этом методе — это не ошибка валидации (ValidationException),
-                // а ошибка неправильного аргумента (IllegalArgumentException)
         throw new IllegalArgumentException("Point winner is not part of this match.");
     }
 
@@ -177,9 +174,7 @@ public class MatchState {
 
             // Проверка на то, что передан ID одного из участников матча должна быть в самом первом методе цепочки —
                 // достаточно выполнить её один раз на входе ID в публичный метод.
-            // Неправильный ID игрока в этом методе — это не ошибка валидации (ValidationException),
-                // а ошибка неправильного аргумента (IllegalArgumentException)
-            throw new IllegalStateException("Point winner is not part of this match.");
+            throw new IllegalArgumentException("Point winner is not part of this match.");
         }
     }
 
