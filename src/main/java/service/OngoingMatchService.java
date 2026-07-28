@@ -3,6 +3,7 @@ package service;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import dto.MatchScoreDto;
+import dto.PlayerScoreDto;
 import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
@@ -89,16 +90,19 @@ public class OngoingMatchService {
         // Стоит пересмотреть логику этой части приложения и избавиться от такого количества лишних запросов.
     public MatchScoreDto findMatchScore(String uuidToConvert) {
         OngoingMatch ongoingMatch = findOngoingMatch(uuidToConvert);
+        // TODO: здесь при каждом вызове метода findMatchScore происходит обращение к БД (для каждого игрока)
         return new MatchScoreDto(
                 ongoingMatch.getUuid().toString(),
-                findPlayerNameById(ongoingMatch.getPlayer1()), // TODO: здесь при каждом вызове метода findMatchScore происходит обращение к БД
-                findPlayerNameById(ongoingMatch.getPlayer2()), // TODO: здесь при каждом вызове метода findMatchScore происходит обращение к БД
-                ongoingMatch.getMatchState().getPlayer1Sets(),
-                ongoingMatch.getMatchState().getPlayer2Sets(),
-                ongoingMatch.getMatchState().getPlayer1GamesInSet(),
-                ongoingMatch.getMatchState().getPlayer2GamesInSet(),
-                ongoingMatch.getMatchState().getPlayer1PointsDisplay(),
-                ongoingMatch.getMatchState().getPlayer2PointsDisplay()
+                new PlayerScoreDto(
+                        findPlayerNameById(ongoingMatch.getPlayer1()),
+                        ongoingMatch.getMatchState().getPlayer1Sets(),
+                        ongoingMatch.getMatchState().getPlayer1GamesInSet(),
+                        ongoingMatch.getMatchState().getPlayer1PointsDisplay()),
+                new PlayerScoreDto(
+                        findPlayerNameById(ongoingMatch.getPlayer2()),
+                        ongoingMatch.getMatchState().getPlayer2Sets(),
+                        ongoingMatch.getMatchState().getPlayer2GamesInSet(),
+                        ongoingMatch.getMatchState().getPlayer2PointsDisplay())
         );
     }
 

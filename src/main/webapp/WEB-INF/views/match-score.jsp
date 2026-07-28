@@ -61,10 +61,10 @@
                         </thead>
                         <tbody>
                         <tr class="player1">
-                            <td class="table-text">${matchScore.player1Name}</td>
-                            <td class="table-text">${matchScore.player1Sets}</td>
-                            <td class="table-text">${matchScore.player1GamesInSet}</td>
-                            <td class="table-text">${matchScore.player1PointsDisplay}</td>
+                            <td class="table-text">${matchScore.player1.name}</td>
+                            <td class="table-text">${matchScore.player1.sets}</td>
+                            <td class="table-text">${matchScore.player1.gamesInSet}</td>
+                            <td class="table-text">${matchScore.player1.points}</td>
                             <td class="table-text">
                                 <button class="score-btn"
                                         type="submit"
@@ -74,10 +74,10 @@
                             </td>
                         </tr>
                         <tr class="player2">
-                            <td class="table-text">${matchScore.player2Name}</td>
-                            <td class="table-text">${matchScore.player2Sets}</td>
-                            <td class="table-text">${matchScore.player2GamesInSet}</td>
-                            <td class="table-text">${matchScore.player2PointsDisplay}</td>
+                            <td class="table-text">${matchScore.player2.name}</td>
+                            <td class="table-text">${matchScore.player2.sets}</td>
+                            <td class="table-text">${matchScore.player2.gamesInSet}</td>
+                            <td class="table-text">${matchScore.player2.points}</td>
                             <td class="table-text">
                                 <button class="score-btn"
                                         type="submit"
