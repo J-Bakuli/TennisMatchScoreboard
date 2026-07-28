@@ -6,13 +6,10 @@ import dto.FinishedMatchesPageDto;
 import lombok.RequiredArgsConstructor;
 import model.OngoingMatch;
 import service.support.PageContext;
-import service.support.UrlNavigation;
 import util.PageUtil;
 import util.StringUtils;
 import validation.PageValidation;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,10 +20,6 @@ public class FinishedMatchesService {
     // Размер страницы и номер по умолчанию более уместно хранить в сервлете, так как в идеале он должен приходить с фронтенда.
         // А сервис должен принимать это значение в качестве аргумента в методы.
 
-    // Константа MATCHES_PATH не должна находиться в сервисе.
-        // А также сервисный слой не должен заниматься формированием URL.
-        // Можно вынести эту логику во вспомогательный класс
-
     // Логику, связанную с расчётом данных для пагинации тоже можно вынести во вспомогательный класс.
 
     // Валидация и парсинг данных от пользователя происходит внутри сервисного слоя, а не на "входе" в приложение.
@@ -35,8 +28,6 @@ public class FinishedMatchesService {
         // Валидация на уровне сервлета позволяет немедленно прервать обработку некорректного запроса и вернуть клиенту ошибку `400 Bad Request`.
         // Текущий подход заставляет приложение выполнять лишнюю работу, передавая невалидные данные дальше в сервисный слой.
         // Стоит запускать логику валидации из сервлета и там же парсить данные.
-
-    private static final String MATCHES_PATH = "/matches";
     private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
 
@@ -49,18 +40,17 @@ public class FinishedMatchesService {
     }
 
     public FinishedMatchesPageDto getFinishedMatchesPage(String pageParam, String playerNameParam) {
-        String normalizedPlayerName = StringUtils.normalizeInput(playerNameParam);
+        String normalizedPlayerName = (playerNameParam == null || playerNameParam.isBlank())
+                ? null
+                : StringUtils.normalizeInput(playerNameParam);
         PageContext context = buildPageContext(pageParam, normalizedPlayerName);
         List<FinishedMatchDto> matchesDto = findMatchesForPage(context);
-        UrlNavigation navigation = buildPaginationNavigation(context, playerNameParam);
 
         return new FinishedMatchesPageDto(
                 matchesDto,
                 context.page(),
                 context.totalPages(),
-                playerNameParam,
-                navigation.previousPageUrl(),
-                navigation.nextPageUrl());
+                playerNameParam);
     }
 
     private PageContext buildPageContext(String pageParam, String playerNameFilter) {
@@ -79,26 +69,6 @@ public class FinishedMatchesService {
         return context.playerNameFilter() == null ?
                 matchesDao.findAllMatches(offset, PAGE_SIZE) :
                 matchesDao.findMatchesByPlayerName(context.playerNameFilter(), offset, PAGE_SIZE);
-    }
-
-    private UrlNavigation buildPaginationNavigation(PageContext context, String playerNameParam) {
-        int page = context.page();
-        String previousPageUrl = page > 1 ? buildMatchesPageUrl(page - 1, playerNameParam) : null;
-        String nextPageUrl = page < context.totalPages() ? buildMatchesPageUrl(page + 1, playerNameParam) : null;
-        return new UrlNavigation(previousPageUrl, nextPageUrl);
-    }
-
-    private String buildMatchesPageUrl(int targetPage, String playerNameParam) {
-        StringBuilder url = new StringBuilder(MATCHES_PATH)
-                .append("?page=")
-                .append(targetPage);
-
-        if (playerNameParam != null && !playerNameParam.isBlank()) {
-            url.append("&filter_by_player_name=")
-                    .append(URLEncoder.encode(playerNameParam.trim(), StandardCharsets.UTF_8));
-        }
-
-        return url.toString();
     }
 
     private int calculatePageOffset(int page) {
