@@ -2,13 +2,14 @@ package dao;
 
 import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
-import exception.NotFoundException;
 import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
 import model.Player;
 import entity.PlayerEntity;
 import util.StringUtils;
+
+import java.util.Optional;
 
 @Slf4j
 public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
@@ -50,7 +51,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
     }
 
     @Override
-    public Player findByName(String name) {
+    public Optional<Player> findByName(String name) {
 
         // Нормализация имени перед сохранением должна выполняться из сервисного слоя —
             // там, где создаётся (должен создаваться) объект JPA Entity сущности.
@@ -64,14 +65,14 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
                     .uniqueResult();
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
-            return H2PlayerMapper.toPlayer(playerEntity);
+            return Optional.ofNullable(playerEntity).map(H2PlayerMapper::toPlayer);
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by name=" + normalizedName, e);
         }
     }
 
     @Override
-    public Player findById(Integer id) {
+    public Optional<Player> findById(Integer id) {
         log.debug("Finding player by id: id={} ", id);
 
         try {
@@ -80,7 +81,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
                     .uniqueResult();
             // Преобразование "доменные модели <—> JPA Entity" — это задача сервисного слоя (через мапперы).
                 // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
-            return H2PlayerMapper.toPlayer(playerEntity);
+            return Optional.ofNullable(playerEntity).map(H2PlayerMapper::toPlayer);
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find player by id=" + id, e);
         }

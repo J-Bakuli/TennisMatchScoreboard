@@ -3,7 +3,6 @@ package service;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import exception.EntityAlreadyExistsException;
-import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
@@ -11,6 +10,7 @@ import model.OngoingMatch;
 import model.Player;
 import validation.PlayerValidation;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -45,23 +45,25 @@ public class NewMatchService {
     }
 
     private Player findOrCreatePlayer(String playerName) {
-        Player player;
-        try {
-            player = playerDao.findByName(playerName);
+        Optional<Player> existing = playerDao.findByName(playerName);
+        if (existing.isPresent()) {
             log.info("Player with name={} already exists", playerName);
-        } catch (NotFoundException e) {
-            player = new Player(null, playerName);
-            PlayerValidation.validatePlayerForCreate(player);
-            try {
-                player = playerDao.save(player);
-
-                // Здесь стоит ловить DataAccessException (которое будет выбрасывать DAO)
-                    // и анализировать, является ли его причиной нарушение уникальности.
-            } catch (EntityAlreadyExistsException ae) {
-                player = playerDao.findByName(playerName);
-            }
-            log.info("Created new Player with name={}", playerName);
+            return existing.get();
         }
+
+        Player player = new Player(null, playerName);
+        PlayerValidation.validatePlayerForCreate(player);
+        try {
+            player = playerDao.save(player);
+
+            // Здесь стоит ловить DataAccessException (которое будет выбрасывать DAO)
+                // и анализировать, является ли его причиной нарушение уникальности.
+        } catch (EntityAlreadyExistsException ae) {
+            player = playerDao.findByName(playerName)
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Player with name=" + playerName + " should exist after duplicate save"));
+        }
+        log.info("Created new Player with name={}", playerName);
         return player;
     }
 }

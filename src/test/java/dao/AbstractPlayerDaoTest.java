@@ -1,7 +1,6 @@
 package dao;
 
 import exception.EntityAlreadyExistsException;
-import exception.NotFoundException;
 import model.Player;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,29 +24,23 @@ public abstract class AbstractPlayerDaoTest {
     @Test
     public void findByNameTest() {
         Player created = playerDao.save(new Player(null, "Safin"));
-        Player found1 = playerDao.findByName("safin");
-        Player found2 = playerDao.findByName("  SAFIN  ");
+        Player found1 = playerDao.findByName("safin").orElseThrow();
+        Player found2 = playerDao.findByName("  SAFIN  ").orElseThrow();
         Assertions.assertEquals(created.id(), found1.id());
         Assertions.assertEquals(created.id(), found2.id());
         Assertions.assertEquals("safin", found1.name());
 
-        Assertions.assertThrows(
-                NotFoundException.class,
-                () -> playerDao.findByName("Nadal")
-        );
+        Assertions.assertTrue(playerDao.findByName("Nadal").isEmpty());
     }
 
     @Test
     public void findByIdTest() {
         Player created = playerDao.save(new Player(null, "Safin"));
-        Player found = playerDao.findById(created.id());
+        Player found = playerDao.findById(created.id()).orElseThrow();
 
         Assertions.assertEquals(created.id(), found.id());
         Assertions.assertEquals("safin", found.name());
 
-        Assertions.assertThrows(
-                NotFoundException.class,
-                () -> playerDao.findById(76)
-        );
+        Assertions.assertTrue(playerDao.findById(76).isEmpty());
     }
 }

@@ -112,8 +112,9 @@ public class OngoingMatchService {
 
     private String findPlayerNameById(Integer id) {
         PlayerValidation.validatePlayerId(id);
-        Player player = playerDao.findById(id);
-        return player.name();
+        return playerDao.findById(id)
+                .map(Player::name)
+                .orElseThrow(() -> new NotFoundException("Player not found by id=" + id));
     }
 
     // Логика этого метода должна выполняться из сервлета
