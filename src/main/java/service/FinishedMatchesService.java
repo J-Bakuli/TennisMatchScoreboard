@@ -3,8 +3,11 @@ package service;
 import dao.MatchesDao;
 import dto.FinishedMatchDto;
 import dto.FinishedMatchesPageDto;
+import entity.FinishedMatchEntity;
 import lombok.RequiredArgsConstructor;
+import mapper.FinishedMatchDtoMapper;
 import model.OngoingMatch;
+import org.mapstruct.factory.Mappers;
 import service.support.PageContext;
 import util.PageUtil;
 import util.StringUtils;
@@ -30,6 +33,7 @@ public class FinishedMatchesService {
         // Стоит запускать логику валидации из сервлета и там же парсить данные.
     private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
+    private final FinishedMatchDtoMapper finishedMatchDtoMapper = Mappers.getMapper(FinishedMatchDtoMapper.class);
 
     public void saveFinishedMatch(OngoingMatch ongoingMatch) {
         if (ongoingMatch == null) {
@@ -66,9 +70,10 @@ public class FinishedMatchesService {
 
     private List<FinishedMatchDto> findMatchesForPage(PageContext context) {
         int offset = calculatePageOffset(context.page());
-        return context.playerNameFilter() == null ?
-                matchesDao.findAllMatches(offset, PAGE_SIZE) :
-                matchesDao.findMatchesByPlayerName(context.playerNameFilter(), offset, PAGE_SIZE);
+        List<FinishedMatchEntity> matchEntities = context.playerNameFilter() == null
+                ? matchesDao.findAllMatches(offset, PAGE_SIZE)
+                : matchesDao.findMatchesByPlayerName(context.playerNameFilter(), offset, PAGE_SIZE);
+        return finishedMatchDtoMapper.toDto(matchEntities);
     }
 
     private int calculatePageOffset(int page) {

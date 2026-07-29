@@ -1,15 +1,12 @@
 package dao;
 
-import dto.FinishedMatchDto;
 import exception.EntityAlreadyExistsException;
 import exception.DataAccessException;
 import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
-import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
 import model.MatchState;
 import model.OngoingMatch;
-import org.mapstruct.factory.Mappers;
 import entity.FinishedMatchEntity;
 import entity.PlayerEntity;
 import util.StringUtils;
@@ -40,8 +37,6 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         // (см. файл "join-fetch-left-join-fetch.md" в этом же пакете)
 
     // Название параметра "pattern" тоже можно вынести в именованную константу
-
-    private final FinishedMatchDtoMapper mapper = Mappers.getMapper(FinishedMatchDtoMapper.class);
 
     private static final String FILTER_BY_PLAYER_PATTERN_QUERY =
             "WHERE (:pattern IS NULL " +
@@ -93,13 +88,13 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public List<FinishedMatchDto> findAllMatches(int offset, int limit) {
+    public List<FinishedMatchEntity> findAllMatches(int offset, int limit) {
         log.debug("Finding all finished matches with offset {} and limit {}", offset, limit);
         return findByPattern(null, offset, limit);
     }
 
     @Override
-    public List<FinishedMatchDto> findMatchesByPlayerName(String playerName, int offset, int limit) {
+    public List<FinishedMatchEntity> findMatchesByPlayerName(String playerName, int offset, int limit) {
         log.debug("Finding finished matches by {} with offset {} and limit {}", playerName, offset, limit);
         String pattern = bringToPattern(playerName);
         return findByPattern(pattern, offset, limit);
@@ -122,18 +117,14 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         }
     }
 
-    private List<FinishedMatchDto> findByPattern(String pattern, int offset, int limit) {
+    private List<FinishedMatchEntity> findByPattern(String pattern, int offset, int limit) {
         try {
-            List<FinishedMatchEntity> matchEntities = getSession()
+            return getSession()
                     .createQuery(SELECT_ALL_MATCHES_BY_PLAYER_NAME_QUERY, FinishedMatchEntity.class)
                     .setParameter("pattern", pattern)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
-
-            // Преобразование "DTO <—> JPA Entity" — это задача сервисного слоя (через мапперы).
-                // (см. файл "separation-of-concerns-principle.md" в этом же пакете)
-            return mapper.toDto(matchEntities);
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to find finished matches", e);
         }

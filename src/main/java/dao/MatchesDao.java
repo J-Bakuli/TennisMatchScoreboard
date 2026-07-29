@@ -1,6 +1,6 @@
 package dao;
 
-import dto.FinishedMatchDto;
+import entity.FinishedMatchEntity;
 import model.OngoingMatch;
 
 import java.util.List;
@@ -16,11 +16,9 @@ public interface MatchesDao {
     // Метод должен принимать FinishedMatchEntity
     void save(OngoingMatch match);
 
-    // Метод должен возвращать List<FinishedMatchEntity>
-    List<FinishedMatchDto> findAllMatches(int offset, int limit);
+    List<FinishedMatchEntity> findAllMatches(int offset, int limit);
 
-    // Метод должен возвращать List<FinishedMatchEntity>
-    List<FinishedMatchDto> findMatchesByPlayerName(String playerName, int offset, int limit);
+    List<FinishedMatchEntity> findMatchesByPlayerName(String playerName, int offset, int limit);
 
     long countAll();
 
