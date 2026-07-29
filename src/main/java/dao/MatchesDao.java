@@ -22,11 +22,7 @@ public interface MatchesDao {
     // Метод должен возвращать List<FinishedMatchEntity>
     List<FinishedMatchDto> findMatchesByPlayerName(String playerName, int offset, int limit);
 
-    // Использование `long` для счётчиков, получаемых из БД, является более правильной практикой,
-        // так как SQL-функция `COUNT` возвращает 64-битное число.
-    Integer countAll();
+    long countAll();
 
-    // Использование `long` для счётчиков, получаемых из БД, является более правильной практикой,
-        // так как SQL-функция `COUNT` возвращает 64-битное число.
-    Integer countByPlayerName(String playerName);
+    long countByPlayerName(String playerName);
 }

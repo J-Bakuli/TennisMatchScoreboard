@@ -56,7 +56,7 @@ public class FinishedMatchesService {
     private PageContext buildPageContext(String pageParam, String playerNameFilter) {
         PageValidation.validatePage(pageParam);
         int page = PageUtil.parsePage(pageParam);
-        int totalMatches = calculateTotalMatches(playerNameFilter);
+        long totalMatches = calculateTotalMatches(playerNameFilter);
         int totalPages = totalMatches == 0 ? 0 : (int) Math.ceil((double) totalMatches / PAGE_SIZE);
         if (totalPages > 0 && page > totalPages) {
             page = totalPages;
@@ -75,7 +75,7 @@ public class FinishedMatchesService {
         return (page - 1) * PAGE_SIZE;
     }
 
-    private int calculateTotalMatches(String playerNameFilter) {
+    private Long calculateTotalMatches(String playerNameFilter) {
         return playerNameFilter == null ? matchesDao.countAll() : matchesDao.countByPlayerName(playerNameFilter);
     }
 }

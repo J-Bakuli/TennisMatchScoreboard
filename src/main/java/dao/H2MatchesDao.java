@@ -87,7 +87,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public Integer countAll() {
+    public long countAll() {
         log.debug("Counting all finished matches");
         return countByPattern(null);
     }
@@ -106,18 +106,17 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public Integer countByPlayerName(String playerName) {
+    public long countByPlayerName(String playerName) {
         log.debug("Counting all finished matches by {}", playerName);
         String pattern = bringToPattern(playerName);
         return countByPattern(pattern);
     }
 
-    private Integer countByPattern(String pattern) {
+    private Long countByPattern(String pattern) {
         try {
             return getSession().createQuery(COUNT_ALL_MATCHES_BY_PLAYER_NAME_QUERY, Long.class)
                     .setParameter("pattern", pattern)
-                    .getSingleResult()
-                    .intValue();
+                    .getSingleResult();
         } catch (PersistenceException e) {
             throw new DataAccessException("Failed to count finished matches", e);
         }
